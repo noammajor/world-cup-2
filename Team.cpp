@@ -113,7 +113,7 @@ void Team::match (int* table) const
         }
     }
 }
-
+/*
 Team* Team::new_united_team (Team* t1, int newTeamID)
 {
     Team* new_team = new Team(newTeamID, this->points + t1->points);
@@ -125,7 +125,7 @@ Team* Team::new_united_team (Team* t1, int newTeamID)
     this->num_players = 0;
     t1->num_players = 0;
     return new_team;
-}
+}*/
 
 bool TeamIDOrder::operator()(const Team* t1, const Team* t2) const
 {

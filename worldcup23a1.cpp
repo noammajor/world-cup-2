@@ -193,7 +193,7 @@ output_t<int> world_cup_t::get_team_points(int teamId)
     }
     return output_t<int>(StatusType::FAILURE);
 }
-//later
+/*
 StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
 {
     if(teamId1 <= 0 || teamId2 <= 0 || newTeamId <= 0 || teamId2 == teamId1)
@@ -212,7 +212,7 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
     remove_team(team1->get_ID());
     remove_team(team2->get_ID());
     return StatusType::SUCCESS;
-}
+}*/
 
 output_t<int> world_cup_t::get_top_scorer(int teamId)
 {

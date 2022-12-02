@@ -30,7 +30,8 @@ public:
             my_team(nullptr), team_Id(teamId), player_id(playerId), games_played(gamesPlayed),  goals(goals), cards(cards),
             goalkeeper(goalKeeper), teamsGamesPlayed(0), closest_top(nullptr), closest_bottom(nullptr) {}
 
-    Player(int playerID);
+    //Player(int playerID);
+
     void root_set();
     ~Player() = default;
 
