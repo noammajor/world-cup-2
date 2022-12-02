@@ -7,7 +7,11 @@ world_cup_t::world_cup_t()
 {
 }
 
-world_cup_t::~world_cup_t() = default;
+world_cup_t::~world_cup_t()
+{
+    all_teams.postorderDelete_data(all_teams.get_root());
+    playersID.postorderDelete_data((playersID.get_root()));
+}
 
 
 StatusType world_cup_t::add_team(int teamId, int points)
