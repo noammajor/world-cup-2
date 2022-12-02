@@ -2,6 +2,8 @@
 #include "AVL_tree.h"
 #include "worldcup23a1.h"
 #include <cstdlib>
+#include "assert.h"
+
 int main()
 {
     world_cup_t game;

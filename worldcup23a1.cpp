@@ -50,7 +50,6 @@ StatusType world_cup_t::remove_team(int teamId)
         {
             return StatusType::ALLOCATION_ERROR;
         }
-        //delete team;
         num_teams--;
         return StatusType::SUCCESS;
     }
@@ -87,7 +86,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
         {
             player->set_lowest(playersGoals.get_data(temp2->father));
         }
-       else
+        else
             player->set_closest_bottom(playersGoals.get_data(temp1));
 
         if (all_teams.get_data(node)->is_legal())
@@ -207,26 +206,41 @@ output_t<int> world_cup_t::get_team_points(int teamId)
     }
     return output_t<int>(StatusType::FAILURE);
 }
-/*
+
 StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
 {
-    if(teamId1 <= 0 || teamId2 <= 0 || newTeamId <= 0 || teamId2 == teamId1)
-        return StatusType::INVALID_INPUT;
-    Node<Team*,TeamIDOrder>* node_team1 = all_teams.search( teamId1);
-    Node<Team*,TeamIDOrder>* node_team2 = legel_teams.search( teamId2);
-    Node<Team*,TeamIDOrder>* node_new_team = all_teams.search( newTeamId);
-    if(!node_team1 || !node_team2 || (node_new_team && newTeamId != teamId1 && newTeamId != teamId2))
-        return StatusType::FAILURE;
-    Team* team1 = all_teams.get_data(node_team1);
-    Team* team2 = all_teams.get_data(node_team2);
-    Team* newTeam = team1->new_united_team(team2, newTeamId);
-    all_teams.insert_to_tree(newTeam);
-    if (newTeam->is_legal())
-        legel_teams.insert_to_tree(newTeam);
-    remove_team(team1->get_ID());
-    remove_team(team2->get_ID());
+    try
+    {
+        if (teamId1 <= 0 || teamId2 <= 0 || newTeamId <= 0 || teamId2 == teamId1)
+            return StatusType::INVALID_INPUT;
+        Node<Team *, TeamIDOrder> *node_team1 = all_teams.search(teamId1);
+        Node<Team *, TeamIDOrder> *node_team2 = all_teams.search(teamId2);
+        Node<Team *, TeamIDOrder> *node_new_team = all_teams.search(newTeamId);
+        if (!node_team1 || !node_team2 || (node_new_team && newTeamId != teamId1 && newTeamId != teamId2))
+            return StatusType::FAILURE;
+        Team *team1 = all_teams.get_data(node_team1);
+        Team *team2 = all_teams.get_data(node_team2);
+        Team *newTeam = team1->new_united_team(team2, newTeamId);
+        if (newTeam)
+        {
+            remove_team(team1->get_ID());
+            remove_team(team2->get_ID());
+            legel_teams.remove(teamId1);
+            legel_teams.remove(teamId2);
+            delete team1;
+            delete team2;
+            all_teams.insert_to_tree(newTeam);
+            if (newTeam->is_legal())
+                legel_teams.insert_to_tree(newTeam);
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        return StatusType::ALLOCATION_ERROR;
+    }
+    num_teams--;
     return StatusType::SUCCESS;
-}*/
+}
 
 output_t<int> world_cup_t::get_top_scorer(int teamId)
 {
@@ -299,7 +313,6 @@ StatusType world_cup_t::get_all_players(int teamId, int *const output)
     }
 	return StatusType::SUCCESS;
 }
-
 
 output_t<int> world_cup_t::get_closest_player(int playerId, int teamId)
 {
