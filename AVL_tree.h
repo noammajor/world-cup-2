@@ -4,6 +4,7 @@
 #include "Team.h"
 #include <stdio.h>
 #include <math.h>
+#include "Player.h"
 
 using namespace std;
 
@@ -166,25 +167,10 @@ Node<T, Cond>* AVL_Tree<T, Cond>::search(const S& data)
     return nullptr;
 }
 
-template<class T, class Cond>
-Node<T, Cond>* AVL_Tree<T, Cond>::rotate_LL(Node<T, Cond>* t)
-{
-    Node<T, Cond> *temp1 = t;
-    Node<T, Cond> *temp2 = t->son_smaller;
-    temp1->son_smaller = temp2->son_larger;
-    if (temp1->son_smaller)
-        temp1->son_smaller->father = temp1;
-    temp2->son_larger = temp1;
-    temp2->father = temp1->father;
-    temp1->father = temp2;
-    temp2->height = height(temp2);
-    temp1->height = height(temp1);
-    return temp2;
-}
-
-template<class T, class Cond>
+ template<class T, class Cond>
 Node<T, Cond>* AVL_Tree<T, Cond>::rotate_RR(Node<T, Cond>* t)
 {
+    Cond is_bigger;
     Node<T, Cond> *temp1 = t;
     Node<T, Cond> *temp2 = t->son_larger;
     temp1->son_larger = temp2->son_smaller;
@@ -192,6 +178,13 @@ Node<T, Cond>* AVL_Tree<T, Cond>::rotate_RR(Node<T, Cond>* t)
         temp1->son_larger->father = temp1;
     temp2->son_smaller = temp1;
     temp2->father = temp1->father;
+    if (temp1->father)
+    {
+        if (is_bigger(temp1->father->data, temp1->data))
+            temp1->father->son_smaller = temp2;
+        else
+            temp1->father->son_larger = temp2;
+    }
     temp1->father = temp2;
     temp2->height = height(temp2);
     temp1->height = height(temp1);
@@ -201,6 +194,7 @@ Node<T, Cond>* AVL_Tree<T, Cond>::rotate_RR(Node<T, Cond>* t)
 template<class T, class Cond>
 Node<T, Cond>* AVL_Tree<T, Cond>::rotate_RL(Node<T, Cond>* t)
 {
+    Cond is_bigger;
     Node<T, Cond> *temp1 = t;  //points to A
     Node<T, Cond> *temp2 = t->son_larger;  //points to B
     Node<T, Cond> *temp3 = t->son_larger->son_smaller;  //points to C
@@ -212,8 +206,15 @@ Node<T, Cond>* AVL_Tree<T, Cond>::rotate_RL(Node<T, Cond>* t)
         temp2->son_smaller->father = temp2;  //right side of C points to new father B
     temp3->son_smaller = temp1;  //left side C points to A
     temp3->son_larger = temp2;  //right side C points to B
-    temp1->father = temp3;  //A points to father C
+    if (temp1->father)
+    {
+        if (is_bigger(temp1->father->data, temp1->data))
+            temp1->father->son_smaller = temp3;
+        else
+            temp1->father->son_larger = temp3;
+    }
     temp3->father = t->father;  //C points to A's father (C's father pointer)
+    temp1->father = temp3;  //A points to father C
     temp2->father = temp3;  //B points to father C
     temp1->height = height(temp1);
     temp2->height = height(temp2);
@@ -224,6 +225,7 @@ Node<T, Cond>* AVL_Tree<T, Cond>::rotate_RL(Node<T, Cond>* t)
 template<class T, class Cond>
 Node<T, Cond>* AVL_Tree<T, Cond>::rotate_LR(Node<T, Cond>* t)
 {
+    Cond is_bigger;
     Node<T, Cond> *temp1 = t;
     Node<T, Cond> *temp2 = t->son_smaller;
     Node<T, Cond> *temp3 = t->son_smaller->son_larger;
@@ -235,15 +237,44 @@ Node<T, Cond>* AVL_Tree<T, Cond>::rotate_LR(Node<T, Cond>* t)
         temp2->son_larger->father = temp2;
     temp3->son_larger = temp1;
     temp3->son_smaller = temp2;
+    if (temp1->father)
+    {
+        if (is_bigger(temp1->father->data, temp1->data))
+            temp1->father->son_smaller = temp3;
+        else
+            temp1->father->son_larger = temp3;
+    }
+    temp3->father = temp1->father;
     temp1->father = temp3;
-    temp3->father = t->father;
     temp2->father = temp3;
     temp1->height = height(temp1);
     temp2->height = height(temp2);
     temp3->height = height(temp3);
     return temp3;
 }
-
+template<class T, class Cond>
+Node<T, Cond>* AVL_Tree<T, Cond>::rotate_LL(Node<T, Cond>* t)
+{
+    Cond is_bigger;
+    Node<T, Cond> *temp1 = t;
+    Node<T, Cond> *temp2 = t->son_smaller;
+    temp1->son_smaller = temp2->son_larger;
+    if (temp1->son_smaller)
+        temp1->son_smaller->father = temp1;
+    temp2->son_larger = temp1;
+    temp2->father = temp1->father;
+    if (temp1->father)
+    {
+        if (is_bigger(temp1->father->data, temp1->data))
+            temp1->father->son_smaller = temp2;
+        else
+            temp1->father->son_larger = temp2;
+    }
+    temp1->father = temp2;
+    temp2->height = height(temp2);
+    temp1->height = height(temp1);
+    return temp2;
+}
 template<class T, class Cond>
 bool AVL_Tree<T, Cond>::insert_to_tree(const T& data)
 {
