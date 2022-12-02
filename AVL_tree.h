@@ -105,7 +105,7 @@ public:
 
     Node<T, Cond>* create_tree(int height);
 
-    void inorder_assign(Node<T, Cond>* node, T* elements);
+    void inorder_assign(Node<T, Cond>* node, T* elements, int size);
 
     int get_size() const;
 
@@ -297,22 +297,15 @@ Node<T, Cond>* AVL_Tree<T, Cond>::insert(Node<T, Cond>* t,const T& data)
     Cond is_bigger;
     if (t == nullptr)
     {
-        try
-        {
-            Node<T, Cond>* base = new(Node<T, Cond>);
-            base->data = data;
-            base->son_larger = nullptr;
-            base->son_smaller = nullptr;
-            base->father = nullptr;
-            base->height = 0;
-            if (!root)
-                higher_data = base;
-            return base;
-        }
-        catch (...)
-        {
-            throw;
-        }
+        Node<T, Cond>* base = new(Node<T, Cond>);
+        base->data = data;
+        base->son_larger = nullptr;
+        base->son_smaller = nullptr;
+        base->father = nullptr;
+        base->height = 0;
+        if (!root)
+            higher_data = base;
+        return base;
     }
     else
     {
@@ -671,7 +664,7 @@ AVL_Tree<T, Cond>* AVL_Tree<T, Cond>::unite(AVL_Tree<T, Cond>* t2)
     merge(united_data, t1_data, this->size, t2_data, t2->size);
     Node<T, Cond>* higher = (is_bigger(this->higher_data->data, t2->higher_data->data)? this->higher_data : t2->higher_data);
     AVL_Tree<T, Cond>* tree = new AVL_Tree<T, Cond>(create_tree(log(this->size + t2->size)), higher,this->size + t2->size);
-    tree->inorder_assign(tree->get_root(), united_data);
+    tree->inorder_assign(tree->get_root(), united_data, this->size + t2->size);
     delete[] t1_data;
     delete[] t2_data;
     delete[] united_data;
@@ -686,7 +679,7 @@ void AVL_Tree<T, Cond>::merge (T* united, T* t1, int t1_size, T* t2, int t2_size
     int j = 0;
     int k = 0;
     while (i < t1_size && j < t2_size)
-        is_bigger(t1[i], t2[j]) ? united[k++] = t1[i++] : united[k++] = t2[j++];
+        is_bigger(t1[i], t2[j]) ? united[k++] = t2[j++] : united[k++] = t1[i++];
     while (i  < t1_size)
         united[k++] =t1[i++];
     while (j < t2_size)
@@ -705,14 +698,17 @@ Node<T, Cond>* AVL_Tree<T, Cond>::create_tree(int height)
 }
 
 template<class T, class Cond>
-void AVL_Tree<T, Cond>::inorder_assign(Node<T, Cond>* node, T* elements)
+void AVL_Tree<T, Cond>::inorder_assign(Node<T, Cond>* node, T* elements, int size)
 {
     static int i = 0;
     if (!node)
         return;
-    inorder_assign(node->son_smaller, elements);
-    node->data = elements[i++];
-    inorder_assign(node->son_larger, elements);
+    inorder_assign(node->son_smaller, elements, size);
+    if (i == size)
+        delete node;
+    else
+        node->data = elements[i++];
+    inorder_assign(node->son_larger, elements, size);
 }
 
 class intBigger
