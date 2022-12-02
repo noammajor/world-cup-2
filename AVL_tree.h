@@ -635,6 +635,8 @@ void AVL_Tree<T,Cond>::postorderDelete(Node<T,Cond>* p)
         return;
     postorderDelete(p->son_smaller);
     postorderDelete(p->son_larger);
+    if (p->data)
+        delete p->data;
     delete p;
 }
 

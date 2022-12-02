@@ -2,6 +2,14 @@
 #include "Team.h"
 #include "Player.h"
 
+/*
+Player::~Player()
+{
+    my_team = nullptr;
+    closest_top = nullptr;
+    closest_bottom = nullptr;
+}*/
+
 void Player::set_closest_bottom(Player* p)
 {
    this->closest_bottom = p;

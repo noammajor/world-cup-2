@@ -25,7 +25,7 @@ public:
 
     Team(const Team&) = delete;
 
-    ~Team() = default; //do later
+    ~Team() = default;
 
     int get_ID () const;
 
