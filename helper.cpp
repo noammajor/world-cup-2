@@ -12,6 +12,7 @@ int main()
     game.add_team(3, 5);
     game.add_team(4, 5);
     game.add_team(5, 5);
+
     game.add_player(21, 1, 1, 1, 20, true); // closest 25
     game.add_player(25, 2, 1, 1, 25, true); // closest 21
     game.add_player(3, 1, 1, 1, 5, true); // closest 4
@@ -34,16 +35,13 @@ int main()
     game.add_player(100, 5, 1, 8, 6, true); // closest 80
     game.add_player(80, 1, 1, 10, 7, true); // closest 90
     game.add_player(90, 5, 1, 10, 7, true); // closest 80
-
- assert(game.get_top_scorer( 1).ans()==80);
+    game.unite_teams(1,2,6);
+    assert(game.get_top_scorer( 1).ans()==80);
     assert(game.get_top_scorer(3).ans()==51);
     assert(game.get_top_scorer(2).ans()==11);
     assert(game.get_top_scorer(4).ans()==70);
     assert(game.get_top_scorer(-4).ans()==90);
-    assert(game.get_closest_player(70, 1).ans()==60);
-    assert(game.get_closest_player(100, 2).ans()==80);
-    assert(game.get_closest_player(80, 1).ans()==90);
-    assert(game.get_closest_player(90, 2).ans()==80);
+
   assert(game.get_closest_player(21, 1).ans()==25);
     assert(game.get_closest_player(25, 2).ans()==21);
     assert(game.get_closest_player(3, 1).ans()==4);
@@ -54,15 +52,15 @@ int main()
     assert(game.get_closest_player(7, 2).ans()==8);
     assert(game.get_closest_player(8, 1).ans()==7);
     assert(game.get_closest_player(9, 2).ans()==10);
-    assert(game.get_closest_player(10, 1).ans()==11);
+    assert(game.get_closest_player(10, 3).ans()==11);
     assert(game.get_closest_player(11, 2).ans()==12);
     assert(game.get_closest_player(12, 1).ans()==11);
     assert(game.get_closest_player(51, 2).ans()==52);
     assert(game.get_closest_player(52, 1).ans()==53);
     assert(game.get_closest_player(53, 2).ans()==52);
     assert(game.get_closest_player(54, 1).ans()==60);
-    assert(game.get_closest_player(60, 2).ans()==70);
-    assert(game.get_closest_player(70, 1).ans()==60);
+   // assert(game.get_closest_player(60, 2).ans()==70);
+  //  assert(game.get_closest_player(70, 1).ans()==60);
     assert(game.get_closest_player(100, 2).ans()==80);
     assert(game.get_closest_player(80, 1).ans()==90);
     assert(game.get_closest_player(90, 2).ans()==80);

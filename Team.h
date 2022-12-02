@@ -16,6 +16,7 @@ class Team
     int tot_goals_cards;
     int games_played;
     AVL_Tree<Player*, Player::PlayerIDOrder>* players;
+    AVL_Tree<Player*, Player::PlayerGoalsOrder>* playerGoal;
 
 public:
     Team(int ID, int points);

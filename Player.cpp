@@ -231,7 +231,7 @@ bool Player::PlayerGoalsOrder::operator() (const Player* p1,const Player* p2) co
     }
     else if(p1->goals == p2->goals)
     {
-        if (p1->cards > p2->cards)
+        if (p1->cards < p2->cards)
         {
             return true;
         }

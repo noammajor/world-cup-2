@@ -33,7 +33,7 @@ void Team::more_game_played()
 
 Player* Team::get_top_player() const
 {
-    return players->get_higher();
+    return playerGoal->get_higher();
 }
 
 AVL_Tree<Player*, Player::PlayerIDOrder>* Team::get_players() const
@@ -58,11 +58,13 @@ Team::Team(int ID, int points): teamID(ID), points(points), num_players(0), num_
                           tot_goals_cards(0),games_played(0), players()
                           {
     players=new  AVL_Tree<Player*, Player::PlayerIDOrder>;
+    playerGoal=new AVL_Tree<Player*, Player::PlayerGoalsOrder>;
 
                           }
 void Team::add_player (Player* player)
 {
     players->insert_to_tree(player);
+    playerGoal->insert_to_tree(player);
     num_players++;
     if (player->is_goalkeeper())
         num_goalkeepers++;

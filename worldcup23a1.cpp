@@ -252,7 +252,7 @@ output_t<int> world_cup_t::get_top_scorer(int teamId)
     {
         if (num_players == 0)
             return output_t<int>(StatusType::FAILURE);
-        return output_t<int>(playersID.get_higher()->get_playerID());
+        return output_t<int>(playersGoals.get_higher()->get_playerID());
     }
     Node<Team*,TeamIDOrder>* node_team = all_teams.search( teamId);
     if(node_team)
