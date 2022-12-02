@@ -12,7 +12,7 @@ int main() {
     int ar[1000]={0};
     for (int i = 0; i < 1000; ++i)
     {
-    ar[i]=i+1;
+        ar[i]=i+1;
     }
     for(int i=0;i<1407;i++) {
         if (i == 1406) {
@@ -22,8 +22,8 @@ int main() {
         }
         test.add_team(i + 2, i + 1);
         test.add_player(ar[i], i + 1, i + 1, i + 1, i + 1, true);
-        //test.print();
     }
+
 return 0;
 
 

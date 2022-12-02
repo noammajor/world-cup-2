@@ -114,7 +114,7 @@ void Team::match (int* table) const
         }
     }
 }
-/*
+
 Team* Team::new_united_team (Team* t1, int newTeamID)
 {
     Team* new_team = new Team(newTeamID, this->points + t1->points);
@@ -122,11 +122,12 @@ Team* Team::new_united_team (Team* t1, int newTeamID)
     new_team->num_goalkeepers = this->num_goalkeepers + t1->num_goalkeepers;
     new_team->tot_goals_cards = this->tot_goals_cards + t1->tot_goals_cards;
     new_team->players = this->players->unite(t1->players);
-
+    new_team->players->inorder_change(new_team->players->get_root(), new_team);
     this->num_players = 0;
     t1->num_players = 0;
     return new_team;
-}*/
+}
+
 
 bool TeamIDOrder::operator()(const Team* t1, const Team* t2) const
 {

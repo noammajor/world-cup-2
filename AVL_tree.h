@@ -89,7 +89,7 @@ public:
 
     void inorder_knockout (Node<T, Cond>* node, int* output, int min, int max);
 
-    void inorder_change (Node<T, Cond>* node, T* t);
+    void inorder_change (Node<T, Cond>* node, Team* t);
 
     T& get_data(Node<T, Cond>* node) const;
 
@@ -104,6 +104,8 @@ public:
     void merge (T* united, T* t1, int t1_size, T* t2, int t2_size);
 
     Node<T, Cond>* create_tree(int height);
+
+    void inorder_assign(Node<T, Cond>* node, T* elements);
 
     int get_size() const;
 
@@ -563,7 +565,7 @@ void AVL_Tree<T, Cond>::inorder_knockout (Node<T, Cond>* node, int* output, int 
 }
 
 template<class T, class Cond>
-void AVL_Tree<T, Cond>::inorder_change (Node<T, Cond>* node, T* t)
+void AVL_Tree<T, Cond>::inorder_change (Node<T, Cond>* node, Team* t)
 {
     if (!node)
         return;
@@ -609,7 +611,7 @@ Node<T,Cond>* AVL_Tree<T, Cond>::set_closests_small(Node<T,Cond>* player) const
     Node<T, Cond>* temp = player;
     if(temp->son_smaller == nullptr)
     {
-        if(temp->father==nullptr)
+        if(temp->father == nullptr)
         {
             return nullptr;
         }
@@ -669,6 +671,7 @@ AVL_Tree<T, Cond>* AVL_Tree<T, Cond>::unite(AVL_Tree<T, Cond>* t2)
     merge(united_data, t1_data, this->size, t2_data, t2->size);
     Node<T, Cond>* higher = (is_bigger(this->higher_data->data, t2->higher_data->data)? this->higher_data : t2->higher_data);
     AVL_Tree<T, Cond>* tree = new AVL_Tree<T, Cond>(create_tree(log(this->size + t2->size)), higher,this->size + t2->size);
+    tree->inorder_assign(tree->get_root(), united_data);
     delete[] t1_data;
     delete[] t2_data;
     delete[] united_data;
@@ -701,6 +704,16 @@ Node<T, Cond>* AVL_Tree<T, Cond>::create_tree(int height)
     return node;
 }
 
+template<class T, class Cond>
+void AVL_Tree<T, Cond>::inorder_assign(Node<T, Cond>* node, T* elements)
+{
+    static int i = 0;
+    if (!node)
+        return;
+    inorder_assign(node->son_smaller, elements);
+    node->data = elements[i++];
+    inorder_assign(node->son_larger, elements);
+}
 
 class intBigger
 {
