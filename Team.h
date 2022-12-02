@@ -18,8 +18,7 @@ class Team
     AVL_Tree<Player*, Player::PlayerIDOrder>* players;
 
 public:
-    Team(int ID, int points): teamID(ID), points(points), num_players(0), num_goalkeepers(0),
-        tot_goals_cards(0),games_played(0), players(nullptr){}
+    Team(int ID, int points);
 
     Team& operator=(const Team&) = delete;
 

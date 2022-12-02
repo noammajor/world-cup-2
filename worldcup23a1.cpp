@@ -72,20 +72,24 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
         player->change_team(team);
         playersID.insert_to_tree(player);
         playersGoals.insert_to_tree(player);
+        team->add_player(player);
         Node<Player*, Player::PlayerGoalsOrder>* temp2 = playersGoals.search(player);
         Node<Player*, Player::PlayerGoalsOrder>* temp1 = playersGoals.set_closests_small(temp2);
-        if(!(playersGoals.isSmallest(temp1)))
-        {
-            player->set_closest_bottom(playersGoals.get_data(temp1));
-        }
-        else if(playersGoals.get_size()==1)
+        if((playersGoals.get_size()==1))
         {
             player->root_set();
         }
-       else
+        else if(temp2== playersGoals.get_root() && temp1== nullptr)
         {
-           player->set_lowest(playersGoals.get_data(temp1));
+            player->set_lowest(playersGoals.get_data(temp2->son_larger));
         }
+        else if(temp1== nullptr)
+        {
+            player->set_lowest(playersGoals.get_data(temp2->father));
+        }
+       else
+            player->set_closest_bottom(playersGoals.get_data(temp1));
+
         if (all_teams.get_data(node)->is_legal())
         {
             if (team->get_num_players() == 11 || (team->get_num_goalkeepers() == 1 && goalKeeper))
@@ -296,15 +300,25 @@ StatusType world_cup_t::get_all_players(int teamId, int *const output)
 	return StatusType::SUCCESS;
 }
 
+
 output_t<int> world_cup_t::get_closest_player(int playerId, int teamId)
 {
 	if (playerId <= 0 || teamId <= 0)
         return output_t<int>(StatusType::INVALID_INPUT);
     Node<Team*,TeamIDOrder>* ptr = all_teams.search(teamId);
-    Node<Player*, Player::PlayerIDOrder>* ptr1= ptr->get_data_Node()->get_players()->search(playerId);
-    if(ptr1== nullptr)
+    Team* ptr1= ptr->get_data_Node();
+    AVL_Tree<Player*, Player::PlayerIDOrder>* ptr2=ptr1->get_players();
+    Node<Player*, Player::PlayerIDOrder>* ptr3=ptr2->search(playerId);
+    if(ptr3== nullptr)
         return output_t<int>(StatusType::FAILURE);
-    return output_t<int>(ptr1->get_data_Node()->get_closest());
+
+    int j=ptr3->get_data_Node()->get_closest();
+    if(j!=-1)
+    {return output_t<int>(j);
+        }
+    else
+
+   return output_t<int>(StatusType::FAILURE);
 }
 
 output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId)

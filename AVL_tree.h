@@ -633,6 +633,7 @@ Node<T,Cond>* AVL_Tree<T, Cond>::set_closests_small(Node<T,Cond>* player) const
 template<class T, class Cond>
 void AVL_Tree<T,Cond>::postorderDelete_nodes(Node<T,Cond>* p)
 {
+
     if (p == nullptr)
         return;
     postorderDelete_nodes(p->son_smaller);
