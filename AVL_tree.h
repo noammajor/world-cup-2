@@ -594,9 +594,9 @@ template<class T, class Cond>
 bool AVL_Tree<T, Cond>::isSmallest(const Node<T,Cond>* t) const
 {
     Node<T,Cond>* temp = root;
-    while(temp!= nullptr)
-        temp=temp->son_smaller;
-    if(t==temp)
+    while(temp->son_smaller != nullptr)
+        temp = temp->son_smaller;
+    if(t == temp)
         return true;
     return false;
 }
