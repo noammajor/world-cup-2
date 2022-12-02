@@ -1,5 +1,11 @@
 #include "Team.h"
 
+Team::Team(int ID, int points): teamID(ID), points(points), num_players(0), num_goalkeepers(0),
+                                tot_goals_cards(0),games_played(0), players()
+{
+    players = new AVL_Tree<Player*, Player::PlayerIDOrder>;
+    playerGoal = new AVL_Tree<Player*, Player::PlayerGoalsOrder>;
+}
 
 int Team::get_num_players() const
 {
@@ -54,13 +60,7 @@ void Team::remove_player(int playerID)
     players->remove(playerID);
     delete to_remove;
 }
-Team::Team(int ID, int points): teamID(ID), points(points), num_players(0), num_goalkeepers(0),
-                          tot_goals_cards(0),games_played(0), players()
-                          {
-    players=new  AVL_Tree<Player*, Player::PlayerIDOrder>;
-    playerGoal=new AVL_Tree<Player*, Player::PlayerGoalsOrder>;
 
-                          }
 void Team::add_player (Player* player)
 {
     players->insert_to_tree(player);
