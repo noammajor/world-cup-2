@@ -18,7 +18,10 @@ StatusType world_cup_t::add_team(int teamId, int points)
     {
         Team* t1 = new Team(teamId, points);
         if(!all_teams.insert_to_tree(t1))
+        {
+            delete t1;
             return StatusType::FAILURE;
+        }
     }
     catch (std::bad_alloc&)
     {
@@ -33,14 +36,17 @@ StatusType world_cup_t::remove_team(int teamId)
     if (teamId <= 0)
         return StatusType::INVALID_INPUT;
     Team* team = all_teams.get_data(all_teams.search(teamId));
-    if (team && team->get_num_players() == 0) {
+    if (team && team->get_num_players() == 0)
+    {
         try
         {
             all_teams.remove(teamId);
         }
-        catch (std::bad_alloc&) {
+        catch (std::bad_alloc&)
+        {
             return StatusType::ALLOCATION_ERROR;
         }
+        //delete team;
         num_teams--;
         return StatusType::SUCCESS;
     }
@@ -68,7 +74,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
         {
             player->set_closest_bottom(playersGoals.get_data(temp1));
         }
-        if(playersGoals.get_size()==1)
+        else if(playersGoals.get_size()==1)
         {
             player->root_set();
         }
@@ -76,7 +82,6 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
         {
            player->set_lowest(playersGoals.get_data(temp1));
         }
-
         if (all_teams.get_data(node)->is_legal())
         {
             if (team->get_num_players() == 11 || (team->get_num_goalkeepers() == 1 && goalKeeper))
@@ -110,6 +115,7 @@ StatusType world_cup_t::remove_player(int playerId)
             legel_teams.remove(team->get_ID());
         playersID.remove(playerId);
         playersGoals.remove(player_to_remove);
+        delete player_node;
     }
     catch (std::bad_alloc&)
     {
@@ -306,7 +312,7 @@ output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId)
         return output_t<int>(StatusType::FAILURE);
     return output_t<int>(winner);
 }
-
+/*
 AVL_Tree<Player*, Player::PlayerIDOrder>& world_cup_t::get_playerIDs()
 {
     return playersID;
@@ -329,4 +335,4 @@ void world_cup_t::print()
         cout<<"shit"<<'\n';
     else
         cout<<"shitworks"<<'\n';
-}
+}*/

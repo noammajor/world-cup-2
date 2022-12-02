@@ -22,7 +22,7 @@ int main() {
         }
         test.add_team(i + 2, i + 1);
         test.add_player(ar[i], i + 1, i + 1, i + 1, i + 1, true);
-        test.print();
+        //test.print();
     }
 return 0;
 

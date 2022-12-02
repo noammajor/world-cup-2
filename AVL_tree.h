@@ -631,7 +631,7 @@ Node<T,Cond>* AVL_Tree<T, Cond>::set_closests_small(Node<T,Cond>* player) const
 template<class T, class Cond>
 void AVL_Tree<T,Cond>::postorderDelete(Node<T,Cond>* p)
 {
-    if (p== nullptr)
+    if (p == nullptr)
         return;
     postorderDelete(p->son_smaller);
     postorderDelete(p->son_larger);
@@ -643,7 +643,7 @@ AVL_Tree<T,Cond>::~AVL_Tree()
 {
     postorderDelete(root);
 }
-/*
+
 template<class T, class Cond>
 AVL_Tree<T, Cond>* AVL_Tree<T, Cond>::unite(AVL_Tree<T, Cond>* t2)
 {
@@ -660,7 +660,7 @@ AVL_Tree<T, Cond>* AVL_Tree<T, Cond>::unite(AVL_Tree<T, Cond>* t2)
     delete[] t2_data;
     delete[] united_data;
     return tree;
-}*/
+}
 
 template<class T, class Cond>
 void AVL_Tree<T, Cond>::merge (T* united, T* t1, int t1_size, T* t2, int t2_size)
