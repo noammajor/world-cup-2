@@ -76,11 +76,11 @@ public:
 
     void fix_height (Node<T, Cond>* node);
 
-    //void print_tree (int* const output);
+    void print_tree (int* const output);
 
     void array_tree (T* const output);
 
-    //void inorder_print (Node<T, Cond>* node, int* const output);
+    void inorder_print (Node<T, Cond>* node, int* const output);
 
     void inorder_array (Node<T, Cond>* node, T* const output);
 
@@ -487,19 +487,19 @@ void AVL_Tree<T, Cond>::fix_height (Node<T, Cond>* node)
         node = node->father;
     }
 }
-/*
+
 template<class T, class Cond>
 void AVL_Tree<T, Cond>::print_tree (int* const output)
 {
     inorder_print(root, output);
-}*/
+}
 
 template<class T, class Cond>
 void AVL_Tree<T, Cond>::array_tree (T* const output)
 {
     inorder_array(root, output);
 }
-/*
+
 template<class T, class Cond>
 void AVL_Tree<T, Cond>::inorder_print (Node<T, Cond>* node,  int* const output)
 {
@@ -509,7 +509,7 @@ void AVL_Tree<T, Cond>::inorder_print (Node<T, Cond>* node,  int* const output)
     inorder_print(node->son_smaller, output);
     output[i++] = node->data->get_playerID();
     inorder_print(node->son_larger, output);
-}*/
+}
 
 template<class T, class Cond>
 void AVL_Tree<T, Cond>::inorder_array (Node<T, Cond>* node,  T* const output)
@@ -597,7 +597,11 @@ Node<T,Cond>* AVL_Tree<T, Cond>::set_closests_small(Node<T,Cond>* player) const
     Node<T, Cond>* temp = player;
     if(temp->son_smaller == nullptr)
     {
-        if(temp == temp->father->son_smaller)
+        if(temp->father==nullptr)
+        {
+            return nullptr;
+        }
+        else if(temp == temp->father->son_smaller)
         {
             while(temp==temp->father->son_smaller)
             {
@@ -606,7 +610,7 @@ Node<T,Cond>* AVL_Tree<T, Cond>::set_closests_small(Node<T,Cond>* player) const
             temp=temp->father;
             return temp;
         }
-        if(temp == temp->father->son_larger)
+        else if(temp == temp->father->son_larger)
         {
                 return temp->father;
         }

@@ -31,7 +31,7 @@ public:
             goalkeeper(goalKeeper), teamsGamesPlayed(0), closest_top(nullptr), closest_bottom(nullptr) {}
 
     Player(int playerID);
-
+    void root_set();
     ~Player() = default;
 
     Player &operator=(const Player &player) = delete;

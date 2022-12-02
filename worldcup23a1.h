@@ -31,8 +31,9 @@ private:
     AVL_Tree<Player*, Player::PlayerGoalsOrder> playersGoals;
 	
 public:
+
 	// <DO-NOT-MODIFY> {
-	
+
 	world_cup_t();
 	virtual ~world_cup_t();
 	
@@ -60,11 +61,16 @@ public:
 	
 	output_t<int> get_all_players_count(int teamId);
 	
-//	StatusType get_all_players(int teamId, int *const output);
+	StatusType get_all_players(int teamId, int *const output);
 	
 	output_t<int> get_closest_player(int playerId, int teamId);
 	
 	output_t<int> knockout_winner(int minTeamId, int maxTeamId);
+    AVL_Tree<Player*, Player::PlayerIDOrder>& get_playerIDs();
+    AVL_Tree<Player*, Player::PlayerGoalsOrder>& playersGoals_get();
+    AVL_Tree<Team*, TeamIDOrder>& legel_teams_get();
+    AVL_Tree<Team*, TeamIDOrder>& all_teams_get();
+    void print();
 	
 	// } </DO-NOT-MODIFY>
 };

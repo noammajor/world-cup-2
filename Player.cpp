@@ -15,7 +15,11 @@ void Player::set_closest_bottom(Player* p)
     p->closest_top->closest_bottom = this;
     p->closest_top = this;
 }
-
+void Player::root_set()
+{
+    this->closest_top= nullptr;
+    this->closest_bottom= nullptr;
+}
 void Player::set_lowest(Player* lowest_player)
 {
     this->closest_bottom = nullptr;

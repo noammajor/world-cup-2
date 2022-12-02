@@ -16,8 +16,8 @@ StatusType world_cup_t::add_team(int teamId, int points)
         return StatusType::INVALID_INPUT;
     try
     {
-        Team t1(teamId, points);
-        if(!all_teams.insert_to_tree(&t1))
+        Team* t1 = new Team(teamId, points);
+        if(!all_teams.insert_to_tree(t1))
             return StatusType::FAILURE;
     }
     catch (std::bad_alloc&)
@@ -58,19 +58,23 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
         if (node == nullptr || playersID.search(playerId))
             return StatusType::FAILURE;
         Team* team = all_teams.get_data(node);
-        Player player(playerId, teamId, gamesPlayed, goals, cards, goalKeeper);
-        player.change_team(team);
-        playersID.insert_to_tree(&player);
-        playersGoals.insert_to_tree(&player);
-        Node<Player*, Player::PlayerGoalsOrder>* temp2 = playersGoals.search(&player);
+        Player* player = new Player(playerId, teamId, gamesPlayed, goals, cards, goalKeeper);
+        player->change_team(team);
+        playersID.insert_to_tree(player);
+        playersGoals.insert_to_tree(player);
+        Node<Player*, Player::PlayerGoalsOrder>* temp2 = playersGoals.search(player);
         Node<Player*, Player::PlayerGoalsOrder>* temp1 = playersGoals.set_closests_small(temp2);
         if(!(playersGoals.isSmallest(temp1)))
         {
-            player.set_closest_bottom(playersGoals.get_data(temp1));
+            player->set_closest_bottom(playersGoals.get_data(temp1));
+        }
+        if(playersGoals.get_size()==1)
+        {
+            player->root_set();
         }
        else
         {
-           player.set_lowest(playersGoals.get_data(temp1));
+           player->set_lowest(playersGoals.get_data(temp1));
         }
 
         if (all_teams.get_data(node)->is_legal())
@@ -244,7 +248,7 @@ output_t<int> world_cup_t::get_all_players_count(int teamId)
     }
     return output_t<int>(num_players);
 }
-/*
+
 StatusType world_cup_t::get_all_players(int teamId, int *const output)
 {
 	if (teamId == 0 || !output)
@@ -280,7 +284,7 @@ StatusType world_cup_t::get_all_players(int teamId, int *const output)
         }
     }
 	return StatusType::SUCCESS;
-}*/
+}
 
 output_t<int> world_cup_t::get_closest_player(int playerId, int teamId)
 {
@@ -303,3 +307,26 @@ output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId)
     return output_t<int>(winner);
 }
 
+AVL_Tree<Player*, Player::PlayerIDOrder>& world_cup_t::get_playerIDs()
+{
+    return playersID;
+}
+AVL_Tree<Player*, Player::PlayerGoalsOrder>&  world_cup_t::playersGoals_get()
+{
+    return playersGoals;
+}
+AVL_Tree<Team*, TeamIDOrder>&  world_cup_t::legel_teams_get()
+{
+    return legel_teams;
+}
+AVL_Tree<Team*, TeamIDOrder>&  world_cup_t::all_teams_get()
+{
+    return all_teams;
+}
+void world_cup_t::print()
+{
+    if(this->playersID.get_root()== nullptr)
+        cout<<"shit"<<'\n';
+    else
+        cout<<"shitworks"<<'\n';
+}

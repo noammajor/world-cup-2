@@ -13,7 +13,7 @@ int Team::get_num_goalkeepers() const
 
 int Team::get_ID () const
 {
-    return teamID;
+    return this->teamID;
 }
 
 void Team::add_points(int points_add)
@@ -134,11 +134,13 @@ bool TeamIDOrder::operator()(const Team* t1, const Team* t2) const
 
 bool TeamIDOrder::operator()(const Team* t1, int num) const
 {
+
     return t1->get_ID() > num;
 }
 
 bool TeamIDOrder::operator()(int num, const Team* t1) const
 {
+
     return num > t1->get_ID();
 }
 
