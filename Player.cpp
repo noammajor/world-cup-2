@@ -147,7 +147,7 @@ void Player::change_team (Team* team)
 {
     my_team = team;
     team_Id = team->get_ID();
-    teamsGamesPlayed = 0;
+    teamsGamesPlayed = team->get_games_played();
 }
 
 bool Player::operator ==(const Player& p1) const

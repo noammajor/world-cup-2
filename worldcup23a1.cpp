@@ -45,6 +45,8 @@ StatusType world_cup_t::remove_team(int teamId)
         try
         {
             all_teams.remove(teamId);
+            legal_teams.remove(teamId);
+            delete team;
         }
         catch (std::bad_alloc&)
         {
@@ -92,7 +94,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
         if (all_teams.get_data(node)->is_legal())
         {
             if (team->get_num_players() == 11 || (team->get_num_goalkeepers() == 1 && goalKeeper))
-                legel_teams.insert_to_tree(team);
+                legal_teams.insert_to_tree(team);
         }
     }
     catch (std::bad_alloc&)
@@ -119,10 +121,10 @@ StatusType world_cup_t::remove_player(int playerId)
         team->remove_player(playerId);
         if (!team->is_legal() && (team->get_num_players() == 10 ||
                             (team->get_num_goalkeepers() == 0 && player_to_remove->is_goalkeeper())))
-            legel_teams.remove(team->get_ID());
+            legal_teams.remove(team->get_ID());
         playersID.remove(playerId);
         playersGoals.remove(player_to_remove);
-        delete player_node;
+        delete player_to_remove;
     }
     catch (std::bad_alloc&)
     {
@@ -225,13 +227,13 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
         {
             remove_team(team1->get_ID());
             remove_team(team2->get_ID());
-            legel_teams.remove(teamId1);
-            legel_teams.remove(teamId2);
-            delete team1;
-            delete team2;
+            //legal_teams.remove(teamId1);
+            //legal_teams.remove(teamId2);
+            //delete team1;
+            //delete team2;
             all_teams.insert_to_tree(newTeam);
             if (newTeam->is_legal())
-                legel_teams.insert_to_tree(newTeam);
+                legal_teams.insert_to_tree(newTeam);
         }
     }
     catch(std::bad_alloc&)
@@ -338,7 +340,7 @@ output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId)
 {
 	if (minTeamId < 0 || maxTeamId < 0 || maxTeamId < minTeamId)
         return output_t<int>(StatusType::INVALID_INPUT);
-    int winner = legel_teams.knockout_tree(minTeamId, maxTeamId);
+    int winner = legal_teams.knockout_tree(minTeamId, maxTeamId);
     if (winner == 0)
         return output_t<int>(StatusType::FAILURE);
     return output_t<int>(winner);
@@ -354,7 +356,7 @@ AVL_Tree<Player*, Player::PlayerGoalsOrder>&  world_cup_t::playersGoals_get()
 }
 AVL_Tree<Team*, TeamIDOrder>&  world_cup_t::legel_teams_get()
 {
-    return legel_teams;
+    return legal_teams;
 }
 AVL_Tree<Team*, TeamIDOrder>&  world_cup_t::all_teams_get()
 {

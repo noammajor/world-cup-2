@@ -58,6 +58,7 @@ void Team::remove_player(int playerID)
     tot_goals_cards -= to_remove->get_goals();
     tot_goals_cards += to_remove->get_cards();
     players->remove(playerID);
+    playerGoal->remove(to_remove);
     delete to_remove;
 }
 
@@ -70,7 +71,6 @@ void Team::add_player (Player* player)
         num_goalkeepers++;
     tot_goals_cards += player->get_goals();
     tot_goals_cards -= player->get_cards();
-    player->add_games(games_played);
 }
 
 int Team::get_games_played() const

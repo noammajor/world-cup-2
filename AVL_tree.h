@@ -81,9 +81,9 @@ public:
 
     void array_tree (T* const output);
 
-    void inorder_print (Node<T, Cond>* node, int* const output);
+    void inorder_print (Node<T, Cond>* node, int* const output, int* i);
 
-    void inorder_array (Node<T, Cond>* node, T* const output);
+    void inorder_array (Node<T, Cond>* node, T* const output, int* i);
 
     int knockout_tree (int min, int max);
 
@@ -105,7 +105,7 @@ public:
 
     Node<T, Cond>* create_tree(int height);
 
-    void inorder_assign(Node<T, Cond>* node, T* elements, int size);
+    void inorder_assign(Node<T, Cond>* node, T* elements, int size, int* i);
 
     int get_size() const;
 
@@ -387,7 +387,6 @@ bool AVL_Tree<T, Cond>::remove (S num)
             temp1->father = ptr->father;
             temp1->son_smaller = ptr->son_smaller;
             ptr->son_smaller->father = temp1;
-            delete ptr;
         }
         else
         {
@@ -411,6 +410,7 @@ bool AVL_Tree<T, Cond>::remove (S num)
             }
         }
     }
+    delete ptr;
     fix_height(ptr_father);
     size--;
     return true;
@@ -438,7 +438,6 @@ void AVL_Tree<T, Cond>::remove_leaf (Node<T, Cond>* ptr) {
     {
        root = nullptr;
     }
-    delete ptr;
 }
 
 template<class T, class Cond>
@@ -465,7 +464,6 @@ void AVL_Tree<T, Cond>::remove_half_leaf (Node<T, Cond>* ptr)
         if (!ptr->son_larger->father)
             root = ptr->son_larger->father;
     }
-    delete ptr;
 }
 
 template<class T, class Cond>
@@ -498,35 +496,37 @@ void AVL_Tree<T, Cond>::fix_height (Node<T, Cond>* node)
 template<class T, class Cond>
 void AVL_Tree<T, Cond>::print_tree (int* const output)
 {
-    inorder_print(root, output);
+    int index = 0;
+    int* i = &index;
+    inorder_print(root, output, i);
 }
 
 template<class T, class Cond>
 void AVL_Tree<T, Cond>::array_tree (T* const output)
 {
-    inorder_array(root, output);
+    int index = 0;
+    int* i = &index;
+    inorder_array(root, output, i);
 }
 
 template<class T, class Cond>
-void AVL_Tree<T, Cond>::inorder_print (Node<T, Cond>* node,  int* const output)
+void AVL_Tree<T, Cond>::inorder_print (Node<T, Cond>* node,  int* const output, int* i)
 {
-    static int i = 0;
     if (!node)
         return;
-    inorder_print(node->son_smaller, output);
-    output[i++] = node->data->get_playerID();
-    inorder_print(node->son_larger, output);
+    inorder_print(node->son_smaller, output, i);
+    output[(*i)++] = node->data->get_playerID();
+    inorder_print(node->son_larger, output, i);
 }
 
 template<class T, class Cond>
-void AVL_Tree<T, Cond>::inorder_array (Node<T, Cond>* node,  T* const output)
+void AVL_Tree<T, Cond>::inorder_array (Node<T, Cond>* node,  T* const output, int* i)
 {
-    static int i = 0;
     if (!node)
         return;
-    inorder_array(node->son_smaller, output);
-    output[i++] = node->data;
-    inorder_array(node->son_larger, output);
+    inorder_array(node->son_smaller, output, i);
+    output[(*i)++] = node->data;
+    inorder_array(node->son_larger, output, i);
 }
 
 template<class T, class Cond>
@@ -665,7 +665,9 @@ AVL_Tree<T, Cond>* AVL_Tree<T, Cond>::unite(AVL_Tree<T, Cond>* t2)
     merge(united_data, t1_data, this->size, t2_data, t2->size);
     Node<T, Cond>* higher = (is_bigger(this->higher_data->data, t2->higher_data->data)? this->higher_data : t2->higher_data);
     AVL_Tree<T, Cond>* tree = new AVL_Tree<T, Cond>(create_tree(log(this->size + t2->size)), higher,this->size + t2->size);
-    tree->inorder_assign(tree->get_root(), united_data, this->size + t2->size);
+    int index = 0;
+    int* i = &index;
+    tree->inorder_assign(tree->get_root(), united_data, this->size + t2->size, i);
     delete[] t1_data;
     delete[] t2_data;
     delete[] united_data;
@@ -704,17 +706,16 @@ Node<T, Cond>* AVL_Tree<T, Cond>::create_tree(int height)
 }
 
 template<class T, class Cond>
-void AVL_Tree<T, Cond>::inorder_assign(Node<T, Cond>* node, T* elements, int size)
+void AVL_Tree<T, Cond>::inorder_assign(Node<T, Cond>* node, T* elements, int size, int* i)
 {
-    static int i = 0;
     if (!node)
         return;
-    inorder_assign(node->son_smaller, elements, size);
-    if (i == size)
+    inorder_assign(node->son_smaller, elements, size, i);
+    if (*i == size)
         delete node;
     else
-        node->data = elements[i++];
-    inorder_assign(node->son_larger, elements, size);
+        node->data = elements[(*i)++];
+    inorder_assign(node->son_larger, elements, size, i);
 }
 
 class intBigger
