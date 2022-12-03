@@ -39,7 +39,7 @@ public:
 
     ~AVL_Tree();
 
-    //AVL_Tree<T, Cond>* unite(AVL_Tree<T, Cond>* t2);
+    AVL_Tree<T, Cond>* unite(AVL_Tree<T, Cond>* t2);
 
     void postorderDelete_nodes(Node<T,Cond>* p);
 
@@ -480,19 +480,6 @@ void AVL_Tree<T, Cond>::fix_height (Node<T, Cond>* node)
     }
 }
 
-//////////////////////////////////////////////////////////////////////////////////////// backup
-/*
-template<class T, class Cond>
-void AVL_Tree<T, Cond>::fix_height (Node<T, Cond>* node)
-{
-    while (node && node->height != height(node))
-    {
-        node->height = height(node);
-        node = fix_balance(node);
-        node = node->father;
-    }
-}*/
-
 template<class T, class Cond>
 void AVL_Tree<T, Cond>::print_tree (int* const output)
 {
@@ -652,7 +639,7 @@ AVL_Tree<T,Cond>::~AVL_Tree()
 {
     postorderDelete_nodes(root);
 }
-/*
+
 template<class T, class Cond>
 AVL_Tree<T, Cond>* AVL_Tree<T, Cond>::unite(AVL_Tree<T, Cond>* t2)
 {
@@ -698,7 +685,7 @@ Node<T, Cond>* AVL_Tree<T, Cond>::create_tree(int height)
     node->son_larger = create_tree(height - 1);
     node->son_smaller = create_tree(height - 1);
     return node;
-}*/
+}
 
 template<class T, class Cond>
 void AVL_Tree<T, Cond>::inorder_assign(Node<T, Cond>* node, T* elements, int size, int* i)

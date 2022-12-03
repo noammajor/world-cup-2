@@ -59,7 +59,7 @@ public:
 
     void match (int* table) const;
 
-    //Team* new_united_team (Team* t1, int newTeamID);
+    Team* new_united_team (Team* t1, int newTeamID);
 
     void player_updated(Player* player, int gamesPlayed, int scoredGoals, int cardsReceived);
 
