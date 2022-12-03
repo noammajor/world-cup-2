@@ -150,6 +150,14 @@ void Player::change_team (Team* team)
     teamsGamesPlayed = team->get_games_played();
 }
 
+void Player::connect_top_bottom()
+{
+    if (this->closest_top)
+        this->closest_top->closest_bottom = this->closest_bottom;
+    if (this->closest_bottom)
+        this->closest_bottom->closest_top = this->closest_top;
+}
+
 bool Player::operator ==(const Player& p1) const
 {
     if (this->player_id == p1.player_id)

@@ -129,9 +129,10 @@ StatusType world_cup_t::remove_player(int playerId)
         Player* player_to_remove = playersID->get_data(player_node);
         Team* team = player_to_remove->get_team();
         team->remove_player(playerId);
-        if (!team->is_legal() && (team->get_num_players() == 10 ||
-                            (team->get_num_goalkeepers() == 0 && player_to_remove->is_goalkeeper())))
+        if ((!team->is_legal() && (team->get_num_players()) == 10) ||
+                            (team->get_num_goalkeepers() == 0 && player_to_remove->is_goalkeeper()))
             legal_teams->remove(team->get_ID());
+        player_to_remove->connect_top_bottom();
         playersID->remove(playerId);
         playersGoals->remove(player_to_remove);
         delete player_to_remove;
@@ -157,7 +158,9 @@ StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
         return StatusType::FAILURE;
     }
     Player* player = playersID->get_data(temp);
+    playersGoals->remove(player);
     player->get_team()->player_updated(player, gamesPlayed, scoredGoals, cardsReceived);
+    playersGoals->insert_to_tree(player);
 	return StatusType::SUCCESS;
 }
 
@@ -244,7 +247,7 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
     {
         return StatusType::ALLOCATION_ERROR;
     }
-    num_teams--;
+    num_teams++;
     return StatusType::SUCCESS;
 }
 

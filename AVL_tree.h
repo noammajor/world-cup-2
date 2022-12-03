@@ -25,7 +25,7 @@ template<class T, class Cond>
 class AVL_Tree
 {
     Node<T, Cond>* root;
-    Node<T, Cond>* higher_data;
+    Node<T, Cond>* higher_data;  ///////////////////////////////////////////////
     int size;
 
 public:
@@ -50,7 +50,7 @@ public:
     int bf(Node<T, Cond> *t);
 
     template<class S>
-    Node<T, Cond>* search(const S& data);
+    Node<T, Cond>* search(const S data);
 
     Node<T, Cond>* rotate_LL(Node<T, Cond>* t);
 
@@ -146,7 +146,7 @@ int AVL_Tree<T, Cond>::bf(Node<T, Cond> *t)
 
 template<class T, class Cond>
 template<class S>
-Node<T, Cond>* AVL_Tree<T, Cond>::search(const S& data)
+Node<T, Cond>* AVL_Tree<T, Cond>::search(const S data)
 {
     Cond is_bigger;
     if (root == nullptr)
@@ -452,7 +452,7 @@ void AVL_Tree<T, Cond>::remove_half_leaf (Node<T, Cond>* ptr)
             ptr->father->son_larger = ptr->son_smaller;
         ptr->son_smaller->father = ptr->father;
         if (!ptr->son_smaller->father)
-            root = ptr->son_smaller->father;
+            root = ptr->son_smaller;
     }
     else
     {
@@ -462,7 +462,7 @@ void AVL_Tree<T, Cond>::remove_half_leaf (Node<T, Cond>* ptr)
             ptr->father->son_larger = ptr->son_larger;
         ptr->son_larger->father = ptr->father;
         if (!ptr->son_larger->father)
-            root = ptr->son_larger->father;
+            root = ptr->son_larger;
     }
 }
 

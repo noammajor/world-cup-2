@@ -35,6 +35,9 @@ int main()
     game.add_player(100, 5, 1, 8, 6, true); // closest 80
     game.add_player(80, 1, 1, 10, 7, true); // closest 90
     game.add_player(90, 5, 1, 10, 7, true); // closest 80
+
+    //game.remove_player(100);
+    //game.remove_player(53);
     game.unite_teams(2,3,6);
     assert(game.get_top_scorer( 1).ans()==80);
     assert(game.get_top_scorer(3).ans()==51);
