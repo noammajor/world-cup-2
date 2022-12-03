@@ -39,7 +39,7 @@ public:
 
     ~AVL_Tree();
 
-    AVL_Tree<T, Cond>* unite(AVL_Tree<T, Cond>* t2);
+    //AVL_Tree<T, Cond>* unite(AVL_Tree<T, Cond>* t2);
 
     void postorderDelete_nodes(Node<T,Cond>* p);
 
@@ -652,7 +652,7 @@ AVL_Tree<T,Cond>::~AVL_Tree()
 {
     postorderDelete_nodes(root);
 }
-
+/*
 template<class T, class Cond>
 AVL_Tree<T, Cond>* AVL_Tree<T, Cond>::unite(AVL_Tree<T, Cond>* t2)
 {
@@ -681,7 +681,6 @@ void AVL_Tree<T, Cond>::merge (T* united, T* t1, int t1_size, T* t2, int t2_size
     int i = 0;
     int j = 0;
     int k = 0;
-    for(int q=1;j< t2_size;j++)
     while (i < t1_size && j < t2_size)
         is_bigger(t1[i], t2[j]) ? united[k++] = t2[j++] : united[k++] = t1[i++];
     while (i  < t1_size)
@@ -699,7 +698,7 @@ Node<T, Cond>* AVL_Tree<T, Cond>::create_tree(int height)
     node->son_larger = create_tree(height - 1);
     node->son_smaller = create_tree(height - 1);
     return node;
-}
+}*/
 
 template<class T, class Cond>
 void AVL_Tree<T, Cond>::inorder_assign(Node<T, Cond>* node, T* elements, int size, int* i)

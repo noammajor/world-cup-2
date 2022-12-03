@@ -25,10 +25,10 @@ class world_cup_t
 private:
 	int num_teams;
     int num_players;
-    AVL_Tree<Team*, TeamIDOrder> legal_teams;
-    AVL_Tree<Team*, TeamIDOrder> all_teams;
-    AVL_Tree<Player*, Player::PlayerIDOrder> playersID;
-    AVL_Tree<Player*, Player::PlayerGoalsOrder> playersGoals;
+    AVL_Tree<Team*, TeamIDOrder>* legal_teams;
+    AVL_Tree<Team*, TeamIDOrder>* all_teams;
+    AVL_Tree<Player*, Player::PlayerIDOrder>* playersID;
+    AVL_Tree<Player*, Player::PlayerGoalsOrder>* playersGoals;
 	
 public:
 	// <DO-NOT-MODIFY> {

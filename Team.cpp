@@ -7,6 +7,12 @@ Team::Team(int ID, int points): teamID(ID), points(points), num_players(0), num_
     playerGoal = new AVL_Tree<Player*, Player::PlayerGoalsOrder>;
 }
 
+Team::~Team()
+{
+    delete players;
+    delete playerGoal;
+}
+
 int Team::get_num_players() const
 {
     return num_players;
@@ -121,7 +127,7 @@ void Team::match (int* table) const
         }
     }
 }
-
+/*
 Team* Team::new_united_team (Team* t1, int newTeamID)
 {
     Team* new_team = new Team(newTeamID, this->points + t1->points);
@@ -133,6 +139,15 @@ Team* Team::new_united_team (Team* t1, int newTeamID)
     this->num_players = 0;
     t1->num_players = 0;
     return new_team;
+}*/
+
+void Team::player_updated(Player* player, int gamesPlayed, int scoredGoals, int cardsReceived)
+{
+    playerGoal->remove(player);
+    player->add_games(gamesPlayed);
+    player->add_goals(scoredGoals);
+    player->add_cards(cardsReceived);
+    playerGoal->insert_to_tree(player);
 }
 
 
