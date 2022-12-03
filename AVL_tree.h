@@ -682,10 +682,6 @@ void AVL_Tree<T, Cond>::merge (T* united, T* t1, int t1_size, T* t2, int t2_size
     int j = 0;
     int k = 0;
     for(int q=1;j< t2_size;j++)
-        if(t1[q]==nullptr)
-        {
-            cout<<"shit";
-        }
     while (i < t1_size && j < t2_size)
         is_bigger(t1[i], t2[j]) ? united[k++] = t2[j++] : united[k++] = t1[i++];
     while (i  < t1_size)
