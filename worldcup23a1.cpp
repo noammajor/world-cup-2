@@ -235,6 +235,7 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
         Team *team2 = all_teams->get_data(node_team2);
         Team *newTeam = team1->new_united_team(team2, newTeamId);
         if (newTeam)
+        if (newTeam)
         {
             remove_team(team1->get_ID());
             remove_team(team2->get_ID());
@@ -345,7 +346,7 @@ output_t<int> world_cup_t::get_closest_player(int playerId, int teamId)
 
 output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId)
 {
-	if (minTeamId < 0 || maxTeamId < 0 || maxTeamId < minTeamId)
+	if (minTeamId < 0 || maxTeamId < minTeamId)
         return output_t<int>(StatusType::INVALID_INPUT);
     int winner = legal_teams->knockout_tree(minTeamId, maxTeamId);
     if (winner == 0)

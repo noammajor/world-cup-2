@@ -74,8 +74,7 @@ void Team::add_player (Player* player)
     num_players++;
     if (player->is_goalkeeper())
         num_goalkeepers++;
-    tot_goals_cards += player->get_goals();
-    tot_goals_cards -= player->get_cards();
+    tot_goals_cards += player->points();
 }
 
 int Team::get_games_played() const
