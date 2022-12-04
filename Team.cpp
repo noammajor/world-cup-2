@@ -133,6 +133,8 @@ Team* Team::new_united_team (Team* t1, int newTeamID)
     new_team->num_players = this->num_players + t1->num_players;
     new_team->num_goalkeepers = this->num_goalkeepers + t1->num_goalkeepers;
     new_team->tot_goals_cards = this->tot_goals_cards + t1->tot_goals_cards;
+    delete new_team->players;
+    delete new_team->playerGoal;
     new_team->players = this->players->unite(t1->players);
     new_team->playerGoal = this->playerGoal->unite(t1->playerGoal);
     new_team->players->inorder_change(new_team->players->get_root(), new_team);

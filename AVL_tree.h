@@ -384,9 +384,12 @@ bool AVL_Tree<T, Cond>::remove (S num)
                 ptr->father->son_smaller = temp1;
             else if (ptr->father)
                 ptr->father->son_larger = temp1;
+            else
+                root = temp1;
             temp1->father = ptr->father;
             temp1->son_smaller = ptr->son_smaller;
             ptr->son_smaller->father = temp1;
+            ptr_father = temp1;  //pointer to fb
         }
         else
         {
@@ -403,11 +406,10 @@ bool AVL_Tree<T, Cond>::remove (S num)
                 ptr->father->son_smaller = temp2;
             else if (ptr->father)
                 ptr->father->son_larger = temp2;
-            if (ptr->son_smaller)
-            {
-                temp2->son_smaller = ptr->son_smaller;
-                ptr->son_smaller->father = temp2;
-            }
+            else
+                root = temp2;
+           temp2->son_smaller = ptr->son_smaller;
+           ptr->son_smaller->father = temp2;
         }
     }
     delete ptr;
@@ -472,7 +474,7 @@ void AVL_Tree<T, Cond>::fix_height (Node<T, Cond>* node)
     if (!node)
         return;
     int prev_height = node->height;
-    fix_balance(node);
+    node = fix_balance(node);
     if (prev_height != node->height)
     {
         node = node->father;
