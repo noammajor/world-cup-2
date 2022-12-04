@@ -537,10 +537,6 @@ int AVL_Tree<T, Cond>::knockout_tree (int min, int max)
     {
         for (int j = 0 ; j < (2*counter - k) ; j += k)
         {
-            int x = table[j];
-            int a = table[j+1];
-            int b = table[j+2];
-            int c = table[j+3];
             table[j] = table[j + 1] > table[j + k + 1] ? table[j] : table[j + k];
             table[j + 1] += table[j + k + 1] + 3;
         }
@@ -549,32 +545,6 @@ int AVL_Tree<T, Cond>::knockout_tree (int min, int max)
     delete[] table;
     return winner_id;
 }
-
-/*
-template<class T, class Cond>
-int AVL_Tree<T, Cond>::knockout_tree (int min, int max)
-{
-    int* table = new[this->get_size()][2];
-    //Pair* table = new Pair[this->get_size()];
-    int index = 0;
-    int* i = &index;
-    int counter = 0;
-    int* counter_p = &counter;
-    inorder_knockout(root, table, min, max, i, counter_p);
-    for (int k = 1 ; k < counter ; k *= 2)
-    {
-        for (int j = 0 ; j < counter - 2*k ; j += 2*k)
-        {
-              table[j].Team_ID = table[j].points > table[j + k].points ? table[j].Team_ID : table[j + k].Team_ID;
-            table[j].points += table[j + k].points + 3;
-        }
-    }
-    int winner_id = table[0].Team_ID;
-    for (int k = 0 ; k < this->get_size() ; k++)
-        delete table[k];
-    delete table;
-    return winner_id;
-}*/
 
 template<class T, class Cond>
 void AVL_Tree<T, Cond>::inorder_knockout (Node<T, Cond>* node, int* output, int min, int max, int* i , int* counter)
@@ -701,7 +671,7 @@ AVL_Tree<T, Cond>* AVL_Tree<T, Cond>::unite(AVL_Tree<T, Cond>* t2)
     T* united_data = new T[this->size + t2->size];
     merge(united_data, t1_data, this->size, t2_data, t2->size);
     Node<T, Cond>* higher = (is_bigger(this->higher_data->data, t2->higher_data->data)? this->higher_data : t2->higher_data);
-    AVL_Tree<T, Cond>* tree = new AVL_Tree<T, Cond>(create_tree(log(this->size + t2->size)), higher,this->size + t2->size);
+    AVL_Tree<T, Cond>* tree = new AVL_Tree<T, Cond>(create_tree(int(log(this->size + t2->size))) + 1, higher,this->size + t2->size);
     int index = 0;
     int* i = &index;
     tree->inorder_assign(tree->get_root(), united_data, this->size + t2->size, i);
@@ -733,7 +703,11 @@ Node<T, Cond>* AVL_Tree<T, Cond>::create_tree(int height)
         return nullptr;
     Node<T, Cond>* node = new Node<T, Cond>;
     node->son_larger = create_tree(height - 1);
+    if (node->son_larger)
+        node->son_larger->father = node;
     node->son_smaller = create_tree(height - 1);
+    if (node->son_smaller)
+        node->son_smaller->father = node;
     return node;
 }
 
@@ -749,21 +723,24 @@ void AVL_Tree<T, Cond>::inorder_assign(Node<T, Cond>* node, T* elements, int siz
         node->data = elements[(*i)++];
     inorder_assign(node->son_larger, elements, size, i);
 }
+
 template<class T, class Cond>
 void AVL_Tree<T, Cond>:: Highest_setting()
 {
-    Node<T,Cond>* temp=this->get_root();
-   if(temp==nullptr)
-   {
-       return;
-   }
-    while(temp->son_larger!=nullptr)
+    Node<T,Cond>* temp = this->get_root();
+    if(temp == nullptr)
     {
-        temp=temp->son_larger;
+        higher_data = nullptr;
+        return;
     }
-    higher_data=temp;
+    while(temp->son_larger != nullptr)
+    {
+        temp = temp->son_larger;
+    }
+    higher_data = temp;
 }
-class intBigger
+
+class intBigger //////////////////////////////////////////////////////////////////////
 {
 public:
     intBigger()= default;

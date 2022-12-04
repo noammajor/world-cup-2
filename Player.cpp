@@ -3,16 +3,16 @@
 #include "Player.h"
 void Player::set_closest_bottom(Player* p)
 {
-    this->closest_bottom=p;
-    if(p->closest_top== nullptr)
+    this->closest_bottom = p;
+    if(p->closest_top == nullptr)
     {
-        p->closest_top=this;
-        this->closest_top= nullptr;
+        p->closest_top = this;
+        this->closest_top = nullptr;
         return;
     }
-    this->closest_top=p->closest_top;
-    p->closest_top->closest_bottom=this;
-    p->closest_top=this;
+    this->closest_top = p->closest_top;
+    p->closest_top->closest_bottom = this;
+    p->closest_top = this;
 }
 
 

@@ -90,17 +90,18 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
         {
             player->root_set();
         }
-        else if(temp2== playersGoals->get_root() && temp1== nullptr)
+        else if(temp2 == playersGoals->get_root() && temp1== nullptr)
         {
             player->set_lowest(playersGoals->get_data(temp2->son_larger));
         }
-        else if(temp1== nullptr)
+        else if(temp1 == nullptr)
         {
             player->set_lowest(playersGoals->get_data(temp2->father));
         }
         else
+        {
             player->set_closest_bottom(playersGoals->get_data(temp1));
-
+        }
         if (all_teams->get_data(node)->is_legal())
         {
             if (team->get_num_players() == 11 || (team->get_num_goalkeepers() == 1 && goalKeeper))
@@ -158,10 +159,29 @@ StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
         return StatusType::FAILURE;
     }
     Player* player = playersID->get_data(temp);
+    player->connect_top_bottom();
     playersGoals->remove(player);
     player->get_team()->player_updated(player, gamesPlayed, scoredGoals, cardsReceived);
     playersGoals->insert_to_tree(player);
-	return StatusType::SUCCESS;
+    Node<Player*, Player::PlayerGoalsOrder>* temp2 = playersGoals->search(player);
+    Node<Player*, Player::PlayerGoalsOrder>* temp1 = playersGoals->set_closests_small(temp2);
+    if((playersGoals->get_size()==1))
+    {
+        player->root_set();
+    }
+    else if(temp2 == playersGoals->get_root() && temp1== nullptr)
+    {
+        player->set_lowest(playersGoals->get_data(temp2->son_larger));
+    }
+    else if(temp1 == nullptr)
+    {
+        player->set_lowest(playersGoals->get_data(temp2->father));
+    }
+    else
+    {
+        player->set_closest_bottom(playersGoals->get_data(temp1));
+    }
+    return StatusType::SUCCESS;
 }
 
 StatusType world_cup_t::play_match(int teamId1, int  teamId2)
