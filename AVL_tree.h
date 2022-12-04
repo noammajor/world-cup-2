@@ -535,9 +535,13 @@ int AVL_Tree<T, Cond>::knockout_tree (int min, int max)
     inorder_knockout(root, table, min, max, i, counter_p);
     for (int k = 2 ; k < 2*counter ; k *= 2)
     {
-        for (int j = 0 ; j < counter - 2*k ; j += 2*k)
+        for (int j = 0 ; j < (2*counter - k) ; j += k)
         {
-            table[j] = table[j + 1] > table[j + k +1] ? table[j] : table[j + k];
+            int x = table[j];
+            int a = table[j+1];
+            int b = table[j+2];
+            int c = table[j+3];
+            table[j] = table[j + 1] > table[j + k + 1] ? table[j] : table[j + k];
             table[j + 1] += table[j + k + 1] + 3;
         }
     }
