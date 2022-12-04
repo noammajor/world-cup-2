@@ -70,11 +70,11 @@ int main()
     {
     cout<<"fail"<<'\n';
     }
-    if(game.remove_player(3)!=StatusType::SUCCESS)
+  if(game.remove_player(3)!=StatusType::SUCCESS)
     {
         cout<<"fail"<<'\n';
-    }
-
+   }
+    game.add_player(3, 1, 1, 1, 5, true);
     assert(game.knockout_winner(1,2).ans()==2);
     game.unite_teams(1,2,6);
     if(game.unite_teams(1,2,6)!= StatusType::FAILURE)

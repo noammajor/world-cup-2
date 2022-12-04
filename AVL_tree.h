@@ -20,6 +20,18 @@ struct Node
     T& get_data_Node();
 };
 
+class Pair
+{
+public:
+    int Team_ID;
+    int points;
+    Pair(int team = 0, int points = 0): Team_ID(team), points(points){}
+    Pair& operator=(const Pair& p)
+    {
+        Team_ID=p.Team_ID;
+        points=p.points;
+    }
+};
 
 template<class T, class Cond>
 class AVL_Tree
@@ -87,7 +99,7 @@ public:
 
     int knockout_tree (int min, int max);
 
-    void inorder_knockout (Node<T, Cond>* node, int* output, int min, int max);
+    void inorder_knockout (Node<T, Cond>* node, Pair** output, int min, int max, int* i, int* counter);
 
     void inorder_change (Node<T, Cond>* node, Team* t);
 
@@ -521,29 +533,38 @@ void AVL_Tree<T, Cond>::inorder_array (Node<T, Cond>* node,  T* const output, in
 template<class T, class Cond>
 int AVL_Tree<T, Cond>::knockout_tree (int min, int max)
 {
-    int* table = new int[2];
-    table[0] = 0;
-    inorder_knockout(root, table, min, max);
-    return table[0];
+    Pair** table = new Pair*[this->get_size()];
+    int index = 0;
+    int* i = &index;
+    int counter = 0;
+    int* counter_p = &counter;
+    inorder_knockout(root, table, min, max, i, counter_p);
+    for (int k = 1 ; k < counter ; k *= 2)
+    {
+        for (int j = 0 ; j < counter - 2*k ; j += 2*k)
+        {
+            table[j]->Team_ID = table[j]->points > table[j + k]->points ? table[j]->Team_ID : table[j + k]->Team_ID;
+            table[j]->points += table[j + k]->points + 3;
+        }
+    }
+    return table[0]->Team_ID;
 }
 
 template<class T, class Cond>
-void AVL_Tree<T, Cond>::inorder_knockout (Node<T, Cond>* node, int* output, int min, int max)
+void AVL_Tree<T, Cond>::inorder_knockout (Node<T, Cond>* node, Pair** output, int min, int max, int* i , int* counter)
 {
     Cond is_bigger;
     if (!node)
         return;
-    if (is_bigger(node->data, min))
-        inorder_knockout(node->son_smaller, output, min, max);
-    if (is_bigger(node->data, min) && is_bigger(max, node->data))
+    if (!(is_bigger(min,node->data)))
+        inorder_knockout(node->son_smaller, output, min, max, i, counter);
+    if (!is_bigger(min, node->data) && !is_bigger(node->data, max))
     {
-        if (is_bigger(node->data, output[0]))
-        {
-            node->data->match(output);
-        }
+        output[(*i)++] = new Pair(node->data->get_ID(), node->data->tot_game_points());
+        (*counter)++;
     }
-    if(is_bigger(max, node->data))
-        inorder_knockout(node->son_larger, output, min, max);
+    if(!is_bigger(node->data, max))
+        inorder_knockout(node->son_larger, output, min, max, i, counter);
 }
 
 template<class T, class Cond>
