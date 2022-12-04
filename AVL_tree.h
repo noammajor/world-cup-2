@@ -20,18 +20,7 @@ struct Node
     T& get_data_Node();
 };
 
-class Pair
-{
-public:
-    int Team_ID;
-    int points;
-    Pair(int team = 0, int points = 0): Team_ID(team), points(points){}
-    Pair& operator=(const Pair& p)
-    {
-        Team_ID=p.Team_ID;
-        points=p.points;
-    }
-};
+
 
 template<class T, class Cond>
 class AVL_Tree
@@ -120,6 +109,8 @@ public:
     void inorder_assign(Node<T, Cond>* node, T* elements, int size, int* i);
 
     int get_size() const;
+
+    void Highest_setting();
 
 };
 
@@ -298,8 +289,10 @@ bool AVL_Tree<T, Cond>::insert_to_tree(const T& data)
     {
         root = ptr;
         size++;
+        Highest_setting();
         return true;
     }
+    this->Highest_setting();
     return false;
 }
 
@@ -311,6 +304,10 @@ Node<T, Cond>* AVL_Tree<T, Cond>::insert(Node<T, Cond>* t,const T& data)
     {
         Node<T, Cond>* base = new(Node<T, Cond>);
         base->data = data;
+        if(isBigger(higher_data->get_data_Node(),data)) // ask after
+        {
+            higher_data=base;
+        }
         base->son_larger = nullptr;
         base->son_smaller = nullptr;
         base->father = nullptr;
@@ -427,6 +424,7 @@ bool AVL_Tree<T, Cond>::remove (S num)
     delete ptr;
     fix_height(ptr_father);
     size--;
+    this->Highest_setting();
     return true;
 }
 
@@ -681,6 +679,7 @@ AVL_Tree<T, Cond>* AVL_Tree<T, Cond>::unite(AVL_Tree<T, Cond>* t2)
     delete[] t1_data;
     delete[] t2_data;
     delete[] united_data;
+    tree->Highest_setting();
     return tree;
 }
 
@@ -722,7 +721,16 @@ void AVL_Tree<T, Cond>::inorder_assign(Node<T, Cond>* node, T* elements, int siz
         node->data = elements[(*i)++];
     inorder_assign(node->son_larger, elements, size, i);
 }
-
+template<class T, class Cond>
+void AVL_Tree<T, Cond>:: Highest_setting()
+{
+    Node<T,Cond>* temp=this->get_root();
+    while(temp=temp->son_larger)
+    {
+        temp=temp->son_larger;
+    }
+    higher_data=temp;
+}
 class intBigger
 {
 public:
