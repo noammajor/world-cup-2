@@ -152,7 +152,6 @@ void Team::player_updated(Player* player, int gamesPlayed, int scoredGoals, int 
     playerGoal->insert_to_tree(player);
 }
 
-
 bool TeamIDOrder::operator()(const Team* t1, const Team* t2) const
 {
     return t1->get_ID() > t2->get_ID();
