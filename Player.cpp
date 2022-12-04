@@ -200,7 +200,7 @@ int Player::get_goals() const
 
 int Player::get_cards() const
 {
-    return goals;
+    return cards;
 }
 
 int Player::get_teamID() const

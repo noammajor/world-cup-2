@@ -88,7 +88,7 @@ public:
 
     int knockout_tree (int min, int max);
 
-    void inorder_knockout (Node<T, Cond>* node, Pair** output, int min, int max, int* i, int* counter);
+    void inorder_knockout (Node<T, Cond>* node, int* output, int min, int max, int* i, int* counter);
 
     void inorder_change (Node<T, Cond>* node, Team* t);
 
@@ -289,7 +289,7 @@ bool AVL_Tree<T, Cond>::insert_to_tree(const T& data)
     {
         root = ptr;
         size++;
-        Highest_setting();
+        this->Highest_setting();
         return true;
     }
     this->Highest_setting();
@@ -304,10 +304,6 @@ Node<T, Cond>* AVL_Tree<T, Cond>::insert(Node<T, Cond>* t,const T& data)
     {
         Node<T, Cond>* base = new(Node<T, Cond>);
         base->data = data;
-        if(isBigger(higher_data->get_data_Node(),data)) // ask after
-        {
-            higher_data=base;
-        }
         base->son_larger = nullptr;
         base->son_smaller = nullptr;
         base->father = nullptr;
@@ -531,7 +527,31 @@ void AVL_Tree<T, Cond>::inorder_array (Node<T, Cond>* node,  T* const output, in
 template<class T, class Cond>
 int AVL_Tree<T, Cond>::knockout_tree (int min, int max)
 {
-    Pair** table = new Pair*[this->get_size()];
+    int* table = new int[2*this->get_size()];
+    int index = 0;
+    int* i = &index;
+    int counter = 0;
+    int* counter_p = &counter;
+    inorder_knockout(root, table, min, max, i, counter_p);
+    for (int k = 2 ; k < counter ; k *= 2)
+    {
+        for (int j = 0 ; j < counter - 2*k ; j += 2*k)
+        {
+            table[j] = table[j + 1] > table[j + k +1] ? table[j] : table[j + k];
+            table[j + 1] += table[j + k + 1] + 3;
+        }
+    }
+    int winner_id = table[0];
+    delete[] table;
+    return winner_id;
+}
+
+/*
+template<class T, class Cond>
+int AVL_Tree<T, Cond>::knockout_tree (int min, int max)
+{
+    int* table = new[this->get_size()][2];
+    //Pair* table = new Pair[this->get_size()];
     int index = 0;
     int* i = &index;
     int counter = 0;
@@ -541,15 +561,19 @@ int AVL_Tree<T, Cond>::knockout_tree (int min, int max)
     {
         for (int j = 0 ; j < counter - 2*k ; j += 2*k)
         {
-            table[j]->Team_ID = table[j]->points > table[j + k]->points ? table[j]->Team_ID : table[j + k]->Team_ID;
-            table[j]->points += table[j + k]->points + 3;
+              table[j].Team_ID = table[j].points > table[j + k].points ? table[j].Team_ID : table[j + k].Team_ID;
+            table[j].points += table[j + k].points + 3;
         }
     }
-    return table[0]->Team_ID;
-}
+    int winner_id = table[0].Team_ID;
+    for (int k = 0 ; k < this->get_size() ; k++)
+        delete table[k];
+    delete table;
+    return winner_id;
+}*/
 
 template<class T, class Cond>
-void AVL_Tree<T, Cond>::inorder_knockout (Node<T, Cond>* node, Pair** output, int min, int max, int* i , int* counter)
+void AVL_Tree<T, Cond>::inorder_knockout (Node<T, Cond>* node, int* output, int min, int max, int* i , int* counter)
 {
     Cond is_bigger;
     if (!node)
@@ -558,7 +582,8 @@ void AVL_Tree<T, Cond>::inorder_knockout (Node<T, Cond>* node, Pair** output, in
         inorder_knockout(node->son_smaller, output, min, max, i, counter);
     if (!is_bigger(min, node->data) && !is_bigger(node->data, max))
     {
-        output[(*i)++] = new Pair(node->data->get_ID(), node->data->tot_game_points());
+        output[(*i)++] = node->data->get_ID();
+        output[(*i)++] = node->data->tot_game_points();
         (*counter)++;
     }
     if(!is_bigger(node->data, max))
@@ -679,7 +704,6 @@ AVL_Tree<T, Cond>* AVL_Tree<T, Cond>::unite(AVL_Tree<T, Cond>* t2)
     delete[] t1_data;
     delete[] t2_data;
     delete[] united_data;
-    tree->Highest_setting();
     return tree;
 }
 
