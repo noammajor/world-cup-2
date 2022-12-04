@@ -533,7 +533,7 @@ int AVL_Tree<T, Cond>::knockout_tree (int min, int max)
     int counter = 0;
     int* counter_p = &counter;
     inorder_knockout(root, table, min, max, i, counter_p);
-    for (int k = 2 ; k < counter ; k *= 2)
+    for (int k = 2 ; k < 2*counter ; k *= 2)
     {
         for (int j = 0 ; j < counter - 2*k ; j += 2*k)
         {
@@ -749,7 +749,11 @@ template<class T, class Cond>
 void AVL_Tree<T, Cond>:: Highest_setting()
 {
     Node<T,Cond>* temp=this->get_root();
-    while(temp=temp->son_larger)
+   if(temp==nullptr)
+   {
+       return;
+   }
+    while(temp->son_larger!=nullptr)
     {
         temp=temp->son_larger;
     }
