@@ -462,7 +462,7 @@ void AVL_Tree<T, Cond>::remove_half_leaf (Node<T, Cond>* ptr)
             ptr->father->son_larger = ptr->son_larger;
         ptr->son_larger->father = ptr->father;
         if (!ptr->son_larger->father)
-            root = ptr->son_larger->father;
+            root = ptr->son_larger;
     }
 }
 
