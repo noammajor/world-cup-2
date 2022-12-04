@@ -747,7 +747,13 @@ void AVL_Tree<T, Cond>::inorder_assign(Node<T, Cond>* node, T* elements, int siz
         return;
     inorder_assign(node->son_smaller, elements, size, i);
     if (*i == size)
+    {
+        if (node == node->father->son_smaller)
+            node->father->son_smaller = nullptr;
+        else
+            node->father->son_larger = nullptr;
         delete node;
+    }
     else
         node->data = elements[(*i)++];
     inorder_assign(node->son_larger, elements, size, i);
