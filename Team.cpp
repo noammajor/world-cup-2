@@ -139,6 +139,8 @@ Team* Team::new_united_team (Team* t1, int newTeamID)
     new_team->players->inorder_change(new_team->players->get_root(), new_team);
     this->num_players = 0;
     t1->num_players = 0;
+    new_team->players->Highest_setting();
+    new_team->playerGoal->Highest_setting();
     return new_team;
 }
 

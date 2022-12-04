@@ -248,11 +248,12 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
             return StatusType::INVALID_INPUT;
         Node<Team *, TeamIDOrder> *node_team1 = all_teams->search(teamId1);
         Node<Team *, TeamIDOrder> *node_team2 = all_teams->search(teamId2);
+
         Node<Team *, TeamIDOrder> *node_new_team = all_teams->search(newTeamId);
         if (!node_team1 || !node_team2 || (node_new_team && newTeamId != teamId1 && newTeamId != teamId2))
             return StatusType::FAILURE;
-        Team *team1 = all_teams->get_data(node_team1);
-        Team *team2 = all_teams->get_data(node_team2);
+        Team *team1 = node_team1->get_data_Node();
+        Team *team2 = node_team2->get_data_Node();
         Team *newTeam = team1->new_united_team(team2, newTeamId);
         if (newTeam)
         if (newTeam)
@@ -261,7 +262,9 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
             remove_team(team2->get_ID());
             all_teams->insert_to_tree(newTeam);
             if (newTeam->is_legal())
+            {
                 legal_teams->insert_to_tree(newTeam);
+            }
         }
     }
     catch(std::bad_alloc&)
@@ -287,7 +290,7 @@ output_t<int> world_cup_t::get_top_scorer(int teamId)
     Node<Team*,TeamIDOrder>* node_team = all_teams->search( teamId);
     if(node_team)
     {
-       return output_t<int>(all_teams->get_data(node_team)->get_top_player()->get_playerID());
+       return output_t<int>(node_team->get_data_Node()->get_top_player()->get_playerID());
     }
     return output_t<int>(StatusType::INVALID_INPUT);
 }
