@@ -293,9 +293,16 @@ output_t<int> world_cup_t::get_top_scorer(int teamId)
         return output_t<int>(playersGoals->get_higher()->get_playerID());
     }
     Node<Team*,TeamIDOrder>* node_team = all_teams->search( teamId);
+    if(node_team== nullptr)
+    {return output_t<int>(StatusType::FAILURE);}
     if(node_team)
     {
-       return output_t<int>(node_team->get_data_Node()->get_top_player()->get_playerID());
+        Team* team =node_team->get_data_Node();
+        if(team->get_num_players()==0)
+        {
+            return output_t<int>(StatusType::FAILURE);
+        }
+       return output_t<int>(team->get_top_player()->get_playerID());
     }
     return output_t<int>(StatusType::INVALID_INPUT);
 }
@@ -342,7 +349,7 @@ StatusType world_cup_t::get_all_players(int teamId, int *const output)
             Team* team = all_teams->get_data(node_team);
             if (team->get_num_players() == 0)
                 return StatusType::FAILURE;
-            team->get_players()->print_tree(output);
+            team->get_Goals()->print_tree(output);
         }
         catch (std::bad_alloc&)
         {
@@ -357,6 +364,10 @@ output_t<int> world_cup_t::get_closest_player(int playerId, int teamId)
 	if (playerId <= 0 || teamId <= 0)
         return output_t<int>(StatusType::INVALID_INPUT);
     Node<Team*,TeamIDOrder>* ptr = all_teams->search(teamId);
+    if(ptr== nullptr)
+    {
+        return output_t<int>(StatusType::FAILURE);
+    }
     Team* ptr1= ptr->get_data_Node();
     AVL_Tree<Player*, Player::PlayerIDOrder>* ptr2=ptr1->get_players();
     Node<Player*, Player::PlayerIDOrder>* ptr3=ptr2->search(playerId);

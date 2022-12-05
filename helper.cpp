@@ -13,8 +13,138 @@ struct test
 };
 int main()
 {
-    world_cup_t *obj = new world_cup_t();
-    StatusType res = obj->add_team(1, 10000);
+    world_cup_t *obj5 = new world_cup_t();
+    int players[10] = {};
+
+    StatusType res = obj5->add_team(1, 2);
+    assert(res == StatusType::SUCCESS);
+    res = obj5->add_player(1001, 1, 1, 10, 1, true);
+    assert(res == StatusType::SUCCESS);
+    res = obj5->get_all_players(1, players);
+    assert(res == StatusType::SUCCESS);
+    assert(players[0] == 1001);
+    for (int i = 1; i < 10; i++)
+    {
+        assert(players[i] == 0);
+    }
+
+    res = obj5->add_player(1002, 1, 1, 9, 1, false);
+   assert(res == StatusType::SUCCESS);
+    res = obj5->add_player(1003, 1, 1, 8, 1, false);
+    assert(res == StatusType::SUCCESS);
+    res = obj5->add_player(1004, 1, 1, 7, 1, false);
+    assert(res == StatusType::SUCCESS);
+    res = obj5->add_player(1005, 1, 1, 6, 1, false);
+    assert(res == StatusType::SUCCESS);
+    res = obj5->add_player(1006, 1, 1, 5, 1, false);
+    assert(res == StatusType::SUCCESS);
+    res = obj5->add_player(1007, 1, 1, 4, 1, false);
+    assert(res == StatusType::SUCCESS);
+    res = obj5->add_player(1008, 1, 1, 3, 1, false);
+    assert(res == StatusType::SUCCESS);
+    res = obj5->add_player(1009, 1, 1, 2, 1, false);
+    assert(res == StatusType::SUCCESS);
+    res = obj5->add_player(1010, 1, 1, 1, 1, false);
+    assert(res == StatusType::SUCCESS);
+
+    res = obj5->get_all_players(1, players);
+    assert(res == StatusType::SUCCESS);
+    for (int i = 0; i < 10; i++)
+    {
+       // cout<<players[i]<<'\n';
+       assert(players[i] == 1010 - i);
+    }
+    world_cup_t *obj12 = new world_cup_t();
+    output_t<int> resn100 = obj12->get_top_scorer(1);
+    assert(resn100.status() == StatusType::FAILURE);
+
+    /*
+    for (int i = 0; i < 10; i++)
+    {
+        players[i] = 0;
+    }
+    res = obj->get_all_players(-1, players);
+    REQUIRE(res == StatusType::SUCCESS);
+    for (int i = 0; i < 10; i++)
+    {
+        REQUIRE(players[i] == 1010 - i);
+    }
+    delete obj;
+}
+
+SECTION("get_all_players goals")
+{
+world_cup_t *obj = new world_cup_t();
+int players[10] = {};
+
+StatusType res = obj->add_team(1, 2);
+REQUIRE(res == StatusType::SUCCESS);
+res = obj->add_player(1001, 1, 1, 5, 2, true);
+REQUIRE(res == StatusType::SUCCESS);
+res = obj->add_player(1002, 1, 1, 3, 4, false);
+REQUIRE(res == StatusType::SUCCESS);
+res = obj->add_player(1003, 1, 1, 1, 1, false);
+REQUIRE(res == StatusType::SUCCESS);
+res = obj->get_all_players(1, players);
+REQUIRE(res == StatusType::SUCCESS);
+REQUIRE(players[0] == 1003);
+REQUIRE(players[1] == 1002);
+REQUIRE(players[2] == 1001);
+
+for (int i = 3; i < 10; i++)
+{
+assert(players[i] == 0);
+}
+
+delete obj;
+}
+     */
+    world_cup_t *obj2 = new world_cup_t();
+    obj2->add_team(1, 2);
+    assert(res == StatusType::SUCCESS);
+    res = obj2->add_player(1001, 1, 10, 15, 0, false);
+    assert(res == StatusType::SUCCESS);
+    res = obj2->add_player(1002, 1, 10, 15, 0, false);
+    assert(res == StatusType::SUCCESS);
+    res = obj2->add_player(1003, 1, 10, 15, 0, false);
+    assert(res == StatusType::SUCCESS);
+    res = obj2->add_player(1004, 1, 10, 15, 0, false);
+    assert(res == StatusType::SUCCESS);
+    res = obj2->add_player(1005, 1, 10, 15, 0, false);
+    assert(res == StatusType::SUCCESS);
+    res = obj2->add_player(1061, 1, 10, 15, 0, false);
+    assert(res == StatusType::SUCCESS);
+    res = obj2->add_player(1032, 1, 10, 15, 0, false);
+    assert(res == StatusType::SUCCESS);
+    res = obj2->add_player(1033, 1, 10, 15, 0, false);
+    assert(res == StatusType::SUCCESS);
+    res = obj2->add_player(1054, 1, 10, 15, 0, false);
+    assert(res == StatusType::SUCCESS);
+    res = obj2->add_player(1065, 1, 10, 15, 0, false);
+    assert(res == StatusType::SUCCESS);
+
+    output_t<int> resn10 = obj2->get_closest_player(55, 1);
+    assert(resn10.status() == StatusType::FAILURE);
+    output_t<int> resn2 = obj2->get_closest_player(1001, 60);
+    assert(resn2.status() == StatusType::FAILURE);
+
+    output_t<int> resn3 = obj2->get_closest_player(-1, 1);
+    assert(resn3.status() == StatusType::INVALID_INPUT);
+    output_t<int> resn4 = obj2->get_closest_player(1001, -1);
+    assert(resn4.status() == StatusType::INVALID_INPUT);
+    output_t<int> resn5 = obj2->get_closest_player(0, 1);
+    assert(resn5.status() == StatusType::INVALID_INPUT);
+    output_t<int> resn6 = obj2->get_closest_player(1001, 0);
+    assert(resn6.status() == StatusType::INVALID_INPUT);
+    world_cup_t *obj1 = new world_cup_t();
+    StatusType res1 = obj1->add_team(1, 2);
+    assert(res1 == StatusType::SUCCESS);
+    output_t<int> resn1 = obj1->get_top_scorer(1);
+    assert(resn1.status() == StatusType::FAILURE);
+    delete obj1;
+    delete obj2;
+            world_cup_t *obj = new world_cup_t();
+
   assert(res == StatusType::SUCCESS);
     res = obj->add_team(2, 20000);
   assert(res == StatusType::SUCCESS);
