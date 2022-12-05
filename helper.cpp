@@ -13,75 +13,6 @@ struct test
 };
 int main()
 {
-    world_cup_t *obj = new world_cup_t();
-    StatusType res = obj->add_team(1, 10000);
-  assert(res == StatusType::SUCCESS);
-    res = obj->add_team(2, 20000);
-  assert(res == StatusType::SUCCESS);
-    res = obj->add_team(3, 30000);
-   assert(res == StatusType::SUCCESS);
-    res = obj->add_team(4, 40000);
-   assert(res == StatusType::SUCCESS);
-    res = obj->add_player(1001, 1, 10, 0, 0, false);
-    assert(res == StatusType::SUCCESS);
-    res = obj->add_player(1002, 1, 10, 0, 0, false);
-    assert(res == StatusType::SUCCESS);
-    res = obj->add_player(1003, 1, 10, 0, 0, false);
-    assert(res == StatusType::SUCCESS);
-    res = obj->add_player(1004, 1, 10, 0, 2, false);
-    assert(res == StatusType::SUCCESS);
-    res = obj->add_player(1005, 1, 10, 0, 0, false);
-    assert(res == StatusType::SUCCESS);
-    res = obj->add_player(1006, 1, 10, 4, 3, false);
-    assert(res == StatusType::SUCCESS);
-    res = obj->add_player(1007, 1, 10, 0, 0, false);
-    assert(res == StatusType::SUCCESS);
-    res = obj->remove_player(1007);
-    assert(res == StatusType::SUCCESS);
-    res = obj->remove_player(1002);
-    assert(res == StatusType::SUCCESS);
-    res = obj->add_player(1008, 1, 10, 0, 0, true);
-    assert(res == StatusType::SUCCESS);
-    res = obj->add_player(1009, 1, 10, 0, 0, false);
-    assert(res == StatusType::SUCCESS);
-    res = obj->add_player(1010, 1, 10, 0, 0, false);
-    assert(res == StatusType::SUCCESS);
-    res = obj->add_player(1011, 1, 10, 0, 0, false);
-    assert(res == StatusType::SUCCESS);
-    res = obj->remove_player(1001);
-    assert(res == StatusType::SUCCESS);
-    res = obj->add_player(1012, 1, 10, 0, 0, false);
-    assert(res == StatusType::SUCCESS);
-
-    res = obj->add_player(2001, 2, 20, 0, 0, false);
-    assert(res == StatusType::SUCCESS);
-    res = obj->add_player(2002, 2, 20, 0, 0, false);
-    assert(res == StatusType::SUCCESS);
-    res = obj->add_player(2003, 2, 20, 0, 0, false);
-    assert(res == StatusType::SUCCESS);
-    res = obj->add_player(2004, 2, 20, 0, 0, false);
-    assert(res == StatusType::SUCCESS);
-    res = obj->add_player(2005, 2, 20, 0, 0, false);
-    assert(res == StatusType::SUCCESS);
-    res = obj->remove_player(1011);
-    assert(res == StatusType::SUCCESS);
-    res = obj->add_player(2006, 2, 20, 0, 0, false);
-    assert(res == StatusType::SUCCESS);
-    res = obj->add_player(2007, 2, 20, 0, 0, false);
-    assert(res == StatusType::SUCCESS);
-    res = obj->add_player(2008, 2, 20, 6, 4, true);
-    assert(res == StatusType::SUCCESS);
-    res = obj->add_player(2009, 2, 20, 0, 0, false);
-    assert(res == StatusType::SUCCESS);
-    res = obj->remove_player(2001);
-    assert(res == StatusType::SUCCESS);
-    res = obj->add_player(2010, 2, 0, 0, 0, false);
-    assert(res == StatusType::SUCCESS);
-    res = obj->add_player(2011, 2, 20, 0, 0, false);
-    assert(res == StatusType::SUCCESS);
-    res = obj->remove_player(2010);
-    assert(res == StatusType::SUCCESS);
-
     world_cup_t game;
     game.add_team(1, 0);
     game.add_team(2, 5);
@@ -107,7 +38,7 @@ int main()
     game.add_player(100, 2, 1, 8, 6, true); // closest 80
     game.add_player(80, 1, 1, 10, 7, true); // closest 90
     game.add_player(90, 2, 1, 10, 7, true); // closest 80
-    assert(game.get_closest_player(21, 1).ans()==25);
+  /*  assert(game.get_closest_player(21, 1).ans()==25);
     assert(game.get_closest_player(25, 2).ans()==21);
     assert(game.get_closest_player(3, 1).ans()==4);
     assert(game.get_closest_player(4, 2).ans()==3);
@@ -128,14 +59,14 @@ int main()
     assert(game.get_closest_player(70, 1).ans()==60);
     assert(game.get_closest_player(100, 2).ans()==80);
     assert(game.get_closest_player(80, 1).ans()==90);
-    assert(game.get_closest_player(90, 2).ans()==80);
+    assert(game.get_closest_player(90, 2).ans()==80);*/
     test t;
     game.get_all_players(-1, t.p);
     if(game.update_player_stats(90,100,5,10000)!=StatusType::SUCCESS)
     {
         cout<<"fail"<<'\n';
     }
-  /*  if(game.update_player_stats(91,100,5,10000)!=StatusType::FAILURE)
+    if(game.update_player_stats(91,100,5,10000)!=StatusType::FAILURE)
     {
     cout<<"fail"<<'\n';
     }
@@ -147,7 +78,7 @@ int main()
     game.get_team_points(2);
    // assert(game.knockout_winner(1,2).ans()==2);
     game.unite_teams(1,2,6);
-    if(game.unite_teams(1,2,6)!= StatusType::FAILURE)
+   /* if(game.unite_teams(1,2,6)!= StatusType::FAILURE)
     {
         cout<<"fail"<<'\n';
     }
