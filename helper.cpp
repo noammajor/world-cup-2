@@ -46,7 +46,7 @@ int main()
     assert(game.get_closest_player(5, 1).ans()==6);
     assert(game.get_closest_player(6, 2).ans()==5);
     assert(game.get_closest_player(24, 1).ans()==7);
-    assert(game.get_closest_player(7, 2).ans()==8);
+   /* assert(game.get_closest_player(7, 2).ans()==8);
     assert(game.get_closest_player(8, 1).ans()==7);
     assert(game.get_closest_player(9, 2).ans()==10);
     assert(game.get_closest_player(10, 1).ans()==11);
@@ -60,14 +60,16 @@ int main()
     assert(game.get_closest_player(70, 1).ans()==60);
     assert(game.get_closest_player(100, 2).ans()==80);
     assert(game.get_closest_player(80, 1).ans()==90);
-    assert(game.get_closest_player(90, 2).ans()==80);
+    assert(game.get_closest_player(90, 2).ans()==80);*/
     test t;
     game.get_all_players(-1, t.p);
+    game.update_player_stats(90,100,5,10000);
+
     if(game.update_player_stats(90,100,5,10000)!=StatusType::SUCCESS)
     {
         cout<<"fail"<<'\n';
     }
-  /*  if(game.update_player_stats(91,100,5,10000)!=StatusType::FAILURE)
+    if(game.update_player_stats(91,100,5,10000)!=StatusType::FAILURE)
     {
     cout<<"fail"<<'\n';
     }
@@ -77,14 +79,14 @@ int main()
    }
     game.add_player(3, 1, 1, 1, 5, true);
     game.get_team_points(2);
-   // assert(game.knockout_winner(1,2).ans()==2);
+    //assert(game.knockout_winner(1,2).ans()==2);
     game.unite_teams(1,2,6);
-    if(game.unite_teams(1,2,6)!= StatusType::FAILURE)
+   /* if(game.unite_teams(1,2,6)!= StatusType::FAILURE)
     {
         cout<<"fail"<<'\n';
-    }
-    assert(game. get_all_players_count(6).ans()==22);
-    game.add_team(2, 5);
+    }*/
+    //assert(game. get_all_players_count(6).ans()==22);
+    /*game.add_team(2, 5);
     game.add_player(101, 2, 1, 2, 2, true); // closest 25
     game.add_player(102, 2, 1, 2, 2, false); // closest 21
     game.add_player(103, 2, 1, 2, 2, false); // closest 4

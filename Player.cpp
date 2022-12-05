@@ -15,29 +15,6 @@ void Player::set_closest_bottom(Player* p)
     p->closest_top = this;
 }
 
-
-
-
-
-
-
-
-
-
-/*void Player::set_closest_bottom(Player* p)
-{
-   this->closest_bottom = p;
-    if(p->closest_top == nullptr)
-    {
-        p->closest_top = this;
-        this->closest_top = nullptr;
-        return;
-    }
-    closest_top = p->closest_top;
-    p->closest_top->closest_bottom = this;
-    p->closest_top = this;
-}
-*/
 void Player::root_set()
 {
     this->closest_top= nullptr;
@@ -48,69 +25,47 @@ void Player::set_lowest(Player* lowest_player)
 {
     this->closest_bottom = nullptr;
     this->closest_top = lowest_player;
-    lowest_player->closest_bottom=this;
+    lowest_player->closest_bottom = this;
 }
 
 int Player::get_closest() const
 {
     int distance_top;
     int distance_bottom;
-    if(this->closest_top== nullptr && this->closest_bottom== nullptr)
+    if(this->closest_top == nullptr && this->closest_bottom == nullptr)
     {
             return -1;
     }
-    if(this->closest_top== nullptr)
+    if(this->closest_top == nullptr)
     {
         return this->closest_bottom->player_id;
     }
-    if(this->closest_bottom==nullptr)
+    else if(this->closest_bottom == nullptr)
     {
         return this->closest_top->player_id;
     }
-    distance_top=((this->closest_top->goals)-this->goals);
-    distance_bottom=(this->goals-(this->closest_bottom->goals));
-    if(distance_bottom!=distance_top)
+    distance_top = ((this->closest_top->goals) - this->goals);
+    distance_bottom=(this->goals -(this->closest_bottom->goals));
+    if(distance_bottom != distance_top)
     {
-        return distance_top>distance_bottom ? this->closest_bottom->player_id : this->closest_top->player_id;
+        return distance_top > distance_bottom ? this->closest_bottom->player_id : this->closest_top->player_id;
     }
     else
     {
-        distance_bottom=this->cards-(this->closest_bottom->cards);
-        distance_top=this->cards-(this->closest_top->cards);
-        if(distance_top<0)
-        {
-            distance_top=-distance_top;
-        }
-        if(distance_bottom<0)
-        {
-            distance_bottom=-distance_bottom;
-        }
-        if(distance_bottom!=distance_top)
-        {
-            return distance_top>distance_bottom ? this->closest_bottom->player_id : this->closest_top->player_id;
+        distance_bottom = (this->closest_bottom->cards) - this->cards;
+        distance_top = this->cards - (this->closest_top->cards);
+        if (distance_bottom != distance_top) {
+            return distance_top > distance_bottom ? this->closest_bottom->player_id : this->closest_top->player_id;
         }
         else
         {
-           distance_bottom=this->player_id-this->closest_bottom->player_id;
-           distance_top=this->player_id-this->closest_top->player_id;
-            if(distance_top<0)
-            {
-                distance_top=-distance_top;
-            }
-            if(distance_bottom<0)
-            {
-                distance_bottom=-distance_bottom;
-            }
-            if(distance_bottom!=distance_top)
-            {
-                return distance_top>distance_bottom ? this->closest_bottom->player_id : this->closest_top->player_id;
-            }
-            distance_bottom=this->closest_bottom->player_id;
-            distance_top=this->closest_top->player_id;
-            return distance_top>distance_bottom ? this->closest_top->player_id : this->closest_bottom->player_id;
+            distance_bottom = this->player_id - this->closest_bottom->player_id;
+            distance_top = this->closest_top->player_id - this->player_id;
+            return distance_top > distance_bottom ? this->closest_bottom->player_id : this->closest_top->player_id;
         }
     }
 }
+
 bool Player::operator >(const Player& p1) const
 {
     if(p1.player_id  < this->player_id)
