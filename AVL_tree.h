@@ -262,6 +262,7 @@ Node<T, Cond>* AVL_Tree<T, Cond>::rotate_LR(Node<T, Cond>* t)
     temp3->height = height(temp3);
     return temp3;
 }
+
 template<class T, class Cond>
 Node<T, Cond>* AVL_Tree<T, Cond>::rotate_LL(Node<T, Cond>* t)
 {
@@ -285,6 +286,7 @@ Node<T, Cond>* AVL_Tree<T, Cond>::rotate_LL(Node<T, Cond>* t)
     temp2->height = height(temp2);
     return temp2;
 }
+
 template<class T, class Cond>
 bool AVL_Tree<T, Cond>::insert_to_tree(const T& data)
 {

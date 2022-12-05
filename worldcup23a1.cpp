@@ -260,40 +260,35 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
             return StatusType::FAILURE;
         Team *team1 = node_team1->get_data_Node();
         Team *team2 = node_team2->get_data_Node();
-        if((team1->get_num_players()==0 &&team2->get_num_players()>0) ||(team2->get_num_players()==0 &&team1->get_num_players()>0))
+        if (team1->get_num_players() == 0 && team2->get_num_players() > 0)
         {
-            if(team1->get_num_players()==0)
-            {
-
-                Team *newTeam1= new Team(newTeamId,team2->get_points());
-                all_teams->remove(team2->get_ID());
-                int temp=team2->get_ID();
-                team2->get_Goals()->inorder_change (team2->get_Goals()->get_root(),newTeam1);
-                if(legal_teams->search(temp)!= nullptr)
-                {
-                    legal_teams->remove(temp);
-                    legal_teams->insert_to_tree(newTeam1);
-                }
-                all_teams->insert_to_tree(newTeam1);
-                return StatusType::SUCCESS;;
-            }
-            if(team2->get_num_players()==0)
-            {
-                Team *newTeam1= new Team(newTeamId,team1->get_points());
-                all_teams->remove(team1->get_ID());
-                int temp=team1->get_ID();
-                team2->get_Goals()->inorder_change (team1->get_Goals()->get_root(),newTeam1);
-                if(legal_teams->search(temp)!= nullptr)
-                {
-                    legal_teams->remove(temp);
-                    legal_teams->insert_to_tree(newTeam1);
-                }
-                all_teams->insert_to_tree(newTeam1);
-            }
+            all_teams->remove(team1->get_ID());
+            legal_teams->remove(team1->get_ID());
+            all_teams->remove(team2->get_ID());
+            legal_teams->remove(team2->get_ID());
+            team2->change_ID(newTeamId);
+            team2->get_players()->inorder_change (team2->get_players()->get_root(), team2);
+            if(team2->is_legal())
+                legal_teams->insert_to_tree(team2);
+            all_teams->insert_to_tree(team2);
+            delete team1;
         }
-        Team *newTeam = team1->new_united_team(team2, newTeamId);
-        if (newTeam)
+        else if (team2->get_num_players() == 0)
         {
+            all_teams->remove(team1->get_ID());
+            legal_teams->remove(team1->get_ID());
+            all_teams->remove(team2->get_ID());
+            legal_teams->remove(team2->get_ID());
+            team1->change_ID(newTeamId);
+            team1->get_players()->inorder_change(team1->get_players()->get_root(), team1);
+            if(team1->is_legal())
+                legal_teams->insert_to_tree(team1);
+            all_teams->insert_to_tree(team2);
+            delete team2;
+        }
+        else
+        {
+            Team *newTeam = team1->new_united_team(team2, newTeamId);
             remove_team(team1->get_ID());
             remove_team(team2->get_ID());
             all_teams->insert_to_tree(newTeam);
@@ -384,7 +379,7 @@ StatusType world_cup_t::get_all_players(int teamId, int *const output)
             Team* team = all_teams->get_data(node_team);
             if (team->get_num_players() == 0)
                 return StatusType::FAILURE;
-            team->get_Goals()->print_tree(output);
+            team->get_playersGoals()->print_tree(output);
         }
         catch (std::bad_alloc&)
         {
