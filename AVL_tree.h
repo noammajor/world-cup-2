@@ -70,6 +70,8 @@ public:
     template<class S>
     bool remove (S num);
 
+    void set_root();
+
     bool isLeaf (Node<T, Cond>* node);
 
     void remove_leaf (Node<T, Cond>* ptr);
@@ -191,7 +193,7 @@ Node<T, Cond>* AVL_Tree<T, Cond>::rotate_RR(Node<T, Cond>* t)
         else
             temp1->father->son_larger = temp2;
     }
-    temp1->father = temp2;
+    temp1->father = temp2;//father changes
     temp1->height = height(temp1);
     temp2->height = height(temp2);
     return temp2;
@@ -288,6 +290,7 @@ bool AVL_Tree<T, Cond>::insert_to_tree(const T& data)
     if (ptr != nullptr)
     {
         root = ptr;
+        ptr->father = nullptr;
         size++;
         this->Highest_setting();
         return true;
@@ -417,6 +420,7 @@ bool AVL_Tree<T, Cond>::remove (S num)
     delete ptr;
     fix_height(ptr_father);
     size--;
+    this->set_root();
     this->Highest_setting();
     return true;
 }
@@ -757,7 +761,18 @@ void AVL_Tree<T, Cond>::inorder_assign(Node<T, Cond>* node, T* elements, int siz
         node->data = elements[(*i)++];
     inorder_assign(node->son_larger, elements, size, i);
 }
-
+template<class T, class Cond>
+void AVL_Tree<T, Cond>::set_root()
+{
+    Node<T,Cond>* temp = this->get_root();
+    if(temp==nullptr)
+    {return;}
+    while(temp->father)
+    {
+        temp=temp->father;
+    }
+    root=temp;
+}
 template<class T, class Cond>
 void AVL_Tree<T, Cond>:: Highest_setting()
 {
