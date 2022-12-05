@@ -140,6 +140,7 @@ Team* Team::new_united_team (Team* t1, int newTeamID)
     delete new_team->players;
     delete new_team->playerGoal;
     new_team->players = this->players->unite(t1->players);
+    players->set_root();
     new_team->playerGoal = this->playerGoal->unite(t1->playerGoal);
     new_team->players->inorder_change(new_team->players->get_root(), new_team);
     this->num_players = 0;

@@ -675,6 +675,7 @@ AVL_Tree<T, Cond>* AVL_Tree<T, Cond>::unite(AVL_Tree<T, Cond>* t2)
         merge(united_data, t1_data, this->size, t2_data, t2->size);
         Node<T, Cond> *higher = (is_bigger(this->higher_data->data, t2->higher_data->data) ? this->higher_data : t2->higher_data);
         AVL_Tree<T, Cond> *tree = new AVL_Tree<T, Cond>(create_tree(int(log2(this->size + t2->size)) + 1), higher, this->size + t2->size);
+        tree->set_root();
         int index = 0;
         int *i = &index;
         tree->inorder_assign(tree->get_root(), united_data, this->size + t2->size, i);
@@ -691,6 +692,7 @@ AVL_Tree<T, Cond>* AVL_Tree<T, Cond>::unite(AVL_Tree<T, Cond>* t2)
         Node<T, Cond> *higher = this->higher_data;
         int size = this->size;
         AVL_Tree<T, Cond> *tree = new AVL_Tree<T, Cond>(create_tree(int(log2(this->size)) + 1), higher, size);
+        tree->set_root();
         int index = 0;
         int *i = &index;
         tree->inorder_assign(tree->get_root(), t1_data, this->size, i);
@@ -704,6 +706,7 @@ AVL_Tree<T, Cond>* AVL_Tree<T, Cond>::unite(AVL_Tree<T, Cond>* t2)
         Node<T, Cond> *higher = t2->higher_data;
         int size = t2->size;
         AVL_Tree<T, Cond> *tree = new AVL_Tree<T, Cond>(create_tree(int(log2(t2->size)) + 1), higher, size);
+        tree->set_root();
         int index = 0;
         int *i = &index;
         tree->inorder_assign(tree->get_root(), t2_data, t2->size, i);
@@ -762,18 +765,20 @@ void AVL_Tree<T, Cond>::inorder_assign(Node<T, Cond>* node, T* elements, int siz
     node->data = elements[(*i)++];
     inorder_assign(node->son_larger, elements, size, i);
 }
+
 template<class T, class Cond>
 void AVL_Tree<T, Cond>::set_root()
 {
     Node<T,Cond>* temp = this->get_root();
-    if(temp==nullptr)
-    {return;}
+    if(temp == nullptr)
+        return;
     while(temp->father)
     {
-        temp=temp->father;
+        temp = temp->father;
     }
-    root=temp;
+    root = temp;
 }
+
 template<class T, class Cond>
 void AVL_Tree<T, Cond>:: Highest_setting()
 {
