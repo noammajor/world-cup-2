@@ -52,6 +52,10 @@ AVL_Tree<Player*, Player::PlayerIDOrder>* Team::get_players() const
 {
     return players;
 }
+AVL_Tree<Player*, Player::PlayerGoalsOrder>* Team::get_Goals() const
+{
+    return playerGoal;
+}
 
 void Team::remove_player(int playerID)
 {

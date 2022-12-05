@@ -57,6 +57,7 @@ public:
 
     AVL_Tree<Player*, Player::PlayerIDOrder>* get_players() const;
 
+    AVL_Tree<Player*, Player::PlayerGoalsOrder>* get_Goals() const;
     void match (int* table) const;
 
     Team* new_united_team (Team* t1, int newTeamID);
