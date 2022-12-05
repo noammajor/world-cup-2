@@ -253,14 +253,12 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
             return StatusType::INVALID_INPUT;
         Node<Team *, TeamIDOrder> *node_team1 = all_teams->search(teamId1);
         Node<Team *, TeamIDOrder> *node_team2 = all_teams->search(teamId2);
-
         Node<Team *, TeamIDOrder> *node_new_team = all_teams->search(newTeamId);
         if (!node_team1 || !node_team2 || (node_new_team && newTeamId != teamId1 && newTeamId != teamId2))
             return StatusType::FAILURE;
         Team *team1 = node_team1->get_data_Node();
         Team *team2 = node_team2->get_data_Node();
         Team *newTeam = team1->new_united_team(team2, newTeamId);
-        if (newTeam)
         if (newTeam)
         {
             remove_team(team1->get_ID());

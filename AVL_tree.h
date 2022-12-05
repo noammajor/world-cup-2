@@ -106,6 +106,8 @@ public:
 
     void merge (T* united, T* t1, int t1_size, T* t2, int t2_size);
 
+    Node<T, Cond>* create_next(int index, int size, T* united_data, Node<T, Cond>* node);
+
     Node<T, Cond>* create_tree(int height);
 
     void inorder_assign(Node<T, Cond>* node, T* elements, int size, int* i);
@@ -664,53 +666,45 @@ AVL_Tree<T,Cond>::~AVL_Tree()
 template<class T, class Cond>
 AVL_Tree<T, Cond>* AVL_Tree<T, Cond>::unite(AVL_Tree<T, Cond>* t2)
 {
-    if(this->size != 0 && t2->size != 0)
-    {
-        T *t1_data = new T[this->size];
-        T *t2_data = new T[t2->size];
-        this->array_tree(t1_data);
-        t2->array_tree(t2_data);
-        T *united_data = new T[this->size + t2->size];
-        merge(united_data, t1_data, this->size, t2_data, t2->size);
-        int size = this->size + t2->size;
-        AVL_Tree<T, Cond> *tree = new AVL_Tree<T, Cond>(create_tree(int(log2(size)) + 1), size);
-        tree->set_root();
-        int index = 0;
-        int *i = &index;
-        tree->inorder_assign(tree->get_root(), united_data, this->size + t2->size, i);
-        delete[] t1_data;
-        delete[] t2_data;
-        delete[] united_data;
-        tree->Highest_setting();
-        return tree;
-    }
-    else if (t2->size == 0)
-    {
-        T *t1_data = new T[this->size];
-        this->array_tree(t1_data);
-        AVL_Tree<T, Cond> *tree = new AVL_Tree<T, Cond>(create_tree(int(log2(size)) + 1), size);
-        tree->set_root();
-        int index = 0;
-        int *i = &index;
-        tree->inorder_assign(tree->get_root(), t1_data, this->size, i);
-        delete[] t1_data;
-        return tree;
-    }
-    else if (this->size == 0)
-    {
-        T *t2_data = new T[t2->size];
-        this->array_tree(t2_data);
-        int size = t2->size;
-        AVL_Tree<T, Cond> *tree = new AVL_Tree<T, Cond>(create_tree(int(log2(size)) + 1), size);
-        tree->set_root();
-        int index = 0;
-        int *i = &index;
-        tree->inorder_assign(tree->get_root(), t2_data, t2->size, i);
-        delete[] t2_data;
-        return tree;
-    }
-    AVL_Tree<T, Cond> *tree = new AVL_Tree<T, Cond>();
+    T *t1_data = new T[this->size];
+    T *t2_data = new T[t2->size];
+    this->array_tree(t1_data);
+    t2->array_tree(t2_data);
+    int size = this->size + t2->size;
+    T *united_data = new T[size];
+    merge(united_data, t1_data, this->size, t2_data, t2->size);
+    Node<T, Cond> *root = new Node<T, Cond>;
+    create_next(0, size, united_data, root);
+    AVL_Tree<T, Cond> *tree = new AVL_Tree<T, Cond>(root, size);
+    tree->Highest_setting();
+    delete[] t1_data;
+    delete[] t2_data;
+    delete[] united_data;
     return tree;
+}
+
+template<class T, class Cond>
+Node<T, Cond>* AVL_Tree<T, Cond>::create_next(int index, int size, T* united_data, Node<T, Cond>* node)
+{
+    node->data = united_data[index + size/2];
+    if (size/2 > 0)
+    {
+        Node<T, Cond>* next_smaller = new Node<T, Cond>;
+        node->son_smaller = create_next(0, size/2, united_data, next_smaller);
+        node->son_smaller->father = node;
+    }
+    else
+        node->son_smaller = nullptr;
+    if ((size - 1)/2 > 0)
+    {
+        Node<T, Cond>* next_larger = new Node<T, Cond>;
+        node->son_larger = create_next(index + size/2 + 1, (size - 1)/2, united_data, next_larger);
+        node->son_larger->father = node;
+    }
+    else
+        node->son_larger = nullptr;
+    node->height = height(node);
+    return node;
 }
 
 template<class T, class Cond>
