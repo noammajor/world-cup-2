@@ -680,6 +680,7 @@ AVL_Tree<T, Cond>* AVL_Tree<T, Cond>::unite(AVL_Tree<T, Cond>* t2)
     delete[] t1_data;
     delete[] t2_data;
     delete[] united_data;
+    root->father = nullptr;
     return tree;
 }
 
