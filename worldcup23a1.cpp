@@ -49,7 +49,12 @@ StatusType world_cup_t::remove_team(int teamId)
 {
     if (teamId <= 0)
         return StatusType::INVALID_INPUT;
-    Team* team = all_teams->get_data(all_teams->search(teamId));
+    Node<Team*, TeamIDOrder>* temp=all_teams->search(teamId);
+    if(temp== nullptr)
+    {
+        return StatusType::FAILURE;
+    }
+    Team* team = temp->get_data_Node();
     if (team && team->get_num_players() == 0)
     {
         try
@@ -78,7 +83,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
         Node<Team*, TeamIDOrder>* node = all_teams->search(teamId);
         if (node == nullptr || playersID->search(playerId))
             return StatusType::FAILURE;
-        Team* team = all_teams->get_data(node);
+        Team* team = node->get_data_Node();
         Player* player = new Player(playerId, teamId, gamesPlayed, goals, cards, goalKeeper);
         player->change_team(team);
         playersID->insert_to_tree(player);
@@ -127,7 +132,7 @@ StatusType world_cup_t::remove_player(int playerId)
         Node<Player*, Player::PlayerIDOrder>* player_node = playersID->search(playerId);
         if (!player_node)
             return StatusType::FAILURE;
-        Player* player_to_remove = playersID->get_data(player_node);
+        Player* player_to_remove = player_node->get_data_Node();
         Team* team = player_to_remove->get_team();
         team->remove_player(playerId);
         if ((!team->is_legal() && (team->get_num_players()) == 10) ||

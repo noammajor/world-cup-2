@@ -55,7 +55,12 @@ AVL_Tree<Player*, Player::PlayerIDOrder>* Team::get_players() const
 
 void Team::remove_player(int playerID)
 {
-    Player* to_remove = players->get_data(players->search(playerID));
+    Node<Player*,Player::PlayerIDOrder>* temp=players->search(playerID);
+    if(temp== nullptr)
+    {
+        return;
+    }
+    Player* to_remove =temp->get_data_Node();
     if (!to_remove)
         return;
     num_players--;
