@@ -156,7 +156,7 @@ void Team::player_updated(Player* player, int gamesPlayed, int scoredGoals, int 
     player->add_goals(scoredGoals);
     player->add_cards(cardsReceived);
     playerGoal->insert_to_tree(player);
-    tot_goals_cards += scoredGoals - cardsReceived;
+
 }
 
 bool TeamIDOrder::operator()(const Team* t1, const Team* t2) const
