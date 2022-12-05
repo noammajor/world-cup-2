@@ -240,7 +240,9 @@ output_t<int> world_cup_t::get_team_points(int teamId)
     Node<Team*, TeamIDOrder>* node_team = all_teams->search( teamId);
     if(node_team)
     {
-        return output_t<int>(all_teams->get_data(node_team)->get_points());
+        Team* t= node_team->get_data_Node();
+        int j=t->get_points();
+        return output_t<int>(j);
     }
     return output_t<int>(StatusType::FAILURE);
 }
@@ -259,6 +261,37 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
             return StatusType::FAILURE;
         Team *team1 = node_team1->get_data_Node();
         Team *team2 = node_team2->get_data_Node();
+        if((team1->get_num_players()==0 &&team2->get_num_players()>0) ||(team2->get_num_players()==0 &&team1->get_num_players()>0))
+        {
+            if(team1->get_num_players()==0)
+            {
+
+                Team *newTeam1= new Team(newTeamId,team2->get_points());
+                all_teams->remove(team2->get_ID());
+                int temp=team2->get_ID();
+                team2->get_Goals()->inorder_change (team2->get_Goals()->get_root(),newTeam1);
+                if(legal_teams->search(temp)!= nullptr)
+                {
+                    legal_teams->remove(temp);
+                    legal_teams->insert_to_tree(newTeam1);
+                }
+                all_teams->insert_to_tree(newTeam1);
+                return StatusType::SUCCESS;;
+            }
+            if(team2->get_num_players()==0)
+            {
+                Team *newTeam1= new Team(newTeamId,team1->get_points());
+                all_teams->remove(team1->get_ID());
+                int temp=team1->get_ID();
+                team2->get_Goals()->inorder_change (team1->get_Goals()->get_root(),newTeam1);
+                if(legal_teams->search(temp)!= nullptr)
+                {
+                    legal_teams->remove(temp);
+                    legal_teams->insert_to_tree(newTeam1);
+                }
+                all_teams->insert_to_tree(newTeam1);
+            }
+        }
         Team *newTeam = team1->new_united_team(team2, newTeamId);
         if (newTeam)
         if (newTeam)
@@ -316,6 +349,10 @@ output_t<int> world_cup_t::get_all_players_count(int teamId)
     if(teamId > 0)
     {
         Node<Team*, TeamIDOrder>* node_team = all_teams->search( teamId);
+        if(node_team== nullptr)
+        {
+            return output_t<int>(StatusType::FAILURE);
+        }
         if(node_team)
             return output_t<int>(all_teams->get_data(node_team)->get_num_players());
     }
@@ -325,7 +362,7 @@ output_t<int> world_cup_t::get_all_players_count(int teamId)
 StatusType world_cup_t::get_all_players(int teamId, int *const output)
 {
 	if (teamId == 0 || !output)
-        return StatusType::FAILURE;
+        return StatusType::INVALID_INPUT;
     else if (teamId < 0)
     {
         if (num_players == 0)

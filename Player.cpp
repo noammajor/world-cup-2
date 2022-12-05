@@ -54,6 +54,14 @@ int Player::get_closest() const
     {
         distance_bottom = (this->closest_bottom->cards) - this->cards;
         distance_top = this->cards - (this->closest_top->cards);
+        if(distance_top<0)
+        {
+            distance_top=-distance_top;
+        }
+        if(distance_bottom<0)
+        {
+            distance_bottom=-distance_bottom;
+        }
         if (distance_bottom != distance_top) {
             return distance_top > distance_bottom ? this->closest_bottom->player_id : this->closest_top->player_id;
         }
@@ -61,6 +69,14 @@ int Player::get_closest() const
         {
             distance_bottom = this->player_id - this->closest_bottom->player_id;
             distance_top = this->closest_top->player_id - this->player_id;
+            if(distance_top<0)
+            {
+                distance_top=-distance_top;
+            }
+            if(distance_bottom<0)
+            {
+                distance_bottom=-distance_bottom;
+            }
             return distance_top > distance_bottom ? this->closest_bottom->player_id : this->closest_top->player_id;
         }
     }
