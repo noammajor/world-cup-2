@@ -532,12 +532,19 @@ void AVL_Tree<T, Cond>::inorder_array (Node<T, Cond>* node,  T* const output, in
 template<class T, class Cond>
 int AVL_Tree<T, Cond>::knockout_tree (int min, int max)
 {
+    if (this->get_size() == 0)
+        return 0;
     int* table = new int[2*this->get_size()];
     int index = 0;
     int* i = &index;
     int counter = 0;
     int* counter_p = &counter;
     inorder_knockout(root, table, min, max, i, counter_p);
+    if (counter == 0)
+    {
+        delete[] table;
+        return 0;
+    }
     for (int k = 2 ; k < 2*counter ; k *= 2)
     {
         for (int j = 0 ; j < (2*counter - k) ; j += k)
