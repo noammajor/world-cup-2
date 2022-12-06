@@ -1,6 +1,8 @@
 #include <iostream>
 #include "Team.h"
 #include "Player.h"
+
+
 void Player::set_closest_bottom(Player* p)
 {
     this->closest_bottom = p;
@@ -188,19 +190,6 @@ int Player::get_team_games() const
 {
     return teamsGamesPlayed;
 }
-
-template<class Condition>
-bool Player::order(const Player& p1,const Condition con) const
-{
-    if(con(*this,p1))
-    {
-        return true;
-    }
-    else
-        return false;
-}
-
-
 
 bool Player::PlayerGoalsOrder::operator() (const Player* p1,const Player* p2) const
 {

@@ -6,7 +6,6 @@
 #include <math.h>
 #include "Player.h"
 
-using namespace std;
 
 
 template<class T, class Cond>
@@ -798,17 +797,5 @@ void AVL_Tree<T, Cond>:: Highest_setting()
     higher_data = temp;
 }
 
-class intBigger //////////////////////////////////////////////////////////////////////
-{
-public:
-    intBigger()= default;
-
-    ~intBigger()= default;
-
-    bool operator()(const int &p1, const int &p2) const
-    {
-        return p1 > p2;
-    }
-};
 
 #endif //AVL_TREE

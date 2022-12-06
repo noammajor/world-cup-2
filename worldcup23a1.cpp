@@ -154,37 +154,45 @@ StatusType world_cup_t::remove_player(int playerId)
 StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
                                         int scoredGoals, int cardsReceived)
 {
-    if (playerId <=0 || gamesPlayed < 0 || scoredGoals < 0 || cardsReceived < 0)
+    try
     {
-        return StatusType::INVALID_INPUT;
+        if (playerId <= 0 || gamesPlayed < 0 || scoredGoals < 0 || cardsReceived < 0)
+        {
+            return StatusType::INVALID_INPUT;
+        }
+        Node<Player *, Player::PlayerIDOrder> *temp = playersID->search(playerId);
+        if (temp == nullptr)
+        {
+            return StatusType::FAILURE;
+        }
+        Player *player = playersID->get_data(temp);
+        player->connect_top_bottom();
+        playersGoals->remove(player);
+        player->get_team()->player_updated(player, gamesPlayed, scoredGoals, cardsReceived);
+        playersGoals->insert_to_tree(player);
+        Node<Player *, Player::PlayerGoalsOrder> *temp2 = playersGoals->search(player);
+        Node<Player *, Player::PlayerGoalsOrder> *temp1 = playersGoals->set_closests_small(temp2);
+        if ((playersGoals->get_size() == 1))
+        {
+            player->root_set();
+        }
+        else if (temp2 == playersGoals->get_root() && temp1 == nullptr)
+        {
+            player->set_lowest(playersGoals->get_data(temp2->son_larger));
+        }
+        else if (temp1 == nullptr)
+        {
+            player->set_lowest(playersGoals->get_data(temp2->father));
+        }
+        else
+        {
+            player->set_closest_bottom(playersGoals->get_data(temp1));
+        }
+
     }
-    Node<Player*, Player::PlayerIDOrder>* temp = playersID->search(playerId);
-    if(temp == nullptr)
+    catch (std::bad_alloc&)
     {
-        return StatusType::FAILURE;
-    }
-    Player* player = playersID->get_data(temp);
-    player->connect_top_bottom();
-    playersGoals->remove(player);
-    player->get_team()->player_updated(player, gamesPlayed, scoredGoals, cardsReceived);
-    playersGoals->insert_to_tree(player);
-    Node<Player*, Player::PlayerGoalsOrder>* temp2 = playersGoals->search(player);
-    Node<Player*, Player::PlayerGoalsOrder>* temp1 = playersGoals->set_closests_small(temp2);
-    if((playersGoals->get_size()==1))
-    {
-        player->root_set();
-    }
-    else if(temp2 == playersGoals->get_root() && temp1== nullptr)
-    {
-        player->set_lowest(playersGoals->get_data(temp2->son_larger));
-    }
-    else if(temp1 == nullptr)
-    {
-        player->set_lowest(playersGoals->get_data(temp2->father));
-    }
-    else
-    {
-        player->set_closest_bottom(playersGoals->get_data(temp1));
+        return StatusType::ALLOCATION_ERROR;
     }
     return StatusType::SUCCESS;
 }
@@ -195,25 +203,33 @@ StatusType world_cup_t::play_match(int teamId1, int  teamId2)
     {
         return StatusType::INVALID_INPUT;
     }
-    Node<Team*,TeamIDOrder>* node_team1 = all_teams->search( teamId1);
-    Node<Team*,TeamIDOrder>* node_team2 = all_teams->search( teamId2);
-    if(!node_team1 || !node_team2)
+    try
     {
-        return StatusType::FAILURE;
+        Node<Team *, TeamIDOrder> *node_team1 = all_teams->search(teamId1);
+
+        Node<Team *, TeamIDOrder> *node_team2 = all_teams->search(teamId2);
+        if (!node_team1 || !node_team2)
+        {
+            return StatusType::FAILURE;
+        }
+        Team *team1 = all_teams->get_data(node_team1);
+        Team *team2 = all_teams->get_data(node_team2);
+        if (!team1->is_legal() || !team2->is_legal())
+            return StatusType::FAILURE;
+        if (team1->tot_game_points() == team2->tot_game_points())
+        {
+            team1->add_points(1);
+            team2->add_points(1);
+        }
+        else
+            team1->tot_game_points() > team2->tot_game_points() ? team1->add_points(3) : team2->add_points(3);
+        team1->more_game_played();
+        team2->more_game_played();
     }
-    Team* team1 = all_teams->get_data(node_team1);
-    Team* team2 = all_teams->get_data(node_team2);
-    if (!team1->is_legal() || !team2->is_legal())
-        return StatusType::FAILURE;
-    if(team1->tot_game_points() == team2->tot_game_points())
+    catch (std::bad_alloc&)
     {
-        team1->add_points(1);
-        team2->add_points(1);
+        return StatusType::ALLOCATION_ERROR;
     }
-    else
-        team1->tot_game_points() > team2->tot_game_points() ? team1->add_points(3) : team2->add_points(3);
-    team1->more_game_played();
-    team2->more_game_played();
 	return StatusType::SUCCESS;
 }
 
@@ -221,14 +237,21 @@ output_t<int> world_cup_t::get_num_played_games(int playerId)
 {
 	if(playerId <= 0)
        return output_t<int>(StatusType::INVALID_INPUT);
-    Node<Player*,Player::PlayerIDOrder>* temp1 = playersID->search(playerId);
-    if(!temp1)
+    try
     {
-        return output_t<int>(StatusType::FAILURE);
+        Node<Player *, Player::PlayerIDOrder> *temp1 = playersID->search(playerId);
+        if (!temp1)
+        {
+            return output_t<int>(StatusType::FAILURE);
+        }
+        Player *player = playersID->get_data(temp1);
+        int teams_games_played = player->get_team()->get_games_played();
+        return output_t<int>(player->get_games_played() + teams_games_played - player->get_team_games());
     }
-    Player* player = playersID->get_data(temp1);
-    int teams_games_played = player->get_team()->get_games_played();
-    return output_t<int>(player->get_games_played() + teams_games_played - player->get_team_games());
+    catch (std::bad_alloc&)
+    {
+        return StatusType::ALLOCATION_ERROR;
+    }
 }
 
 output_t<int> world_cup_t::get_team_points(int teamId)
@@ -237,12 +260,20 @@ output_t<int> world_cup_t::get_team_points(int teamId)
     {
         return output_t<int>(StatusType::INVALID_INPUT);
     }
-    Node<Team*, TeamIDOrder>* node_team = all_teams->search( teamId);
-    if(node_team)
+    try
     {
-        Team* t= node_team->get_data_Node();
-        int j=t->get_points();
-        return output_t<int>(j);
+        Node<Team *, TeamIDOrder> *node_team = all_teams->search(teamId);
+
+        if (node_team)
+        {
+            Team *t = node_team->get_data_Node();
+            int j = t->get_points();
+            return output_t<int>(j);
+        }
+    }
+    catch (std::bad_alloc&)
+    {
+        return StatusType::ALLOCATION_ERROR;
     }
     return output_t<int>(StatusType::FAILURE);
 }
@@ -312,25 +343,33 @@ output_t<int> world_cup_t::get_top_scorer(int teamId)
     {
         return output_t<int>(StatusType::INVALID_INPUT);
     }
-    if(teamId < 0)
+    try
     {
-        if (num_players == 0)
-            return output_t<int>(StatusType::FAILURE);
-        return output_t<int>(playersGoals->get_higher()->get_playerID());
-    }
-    Node<Team*,TeamIDOrder>* node_team = all_teams->search( teamId);
-    if(node_team== nullptr)
-    {return output_t<int>(StatusType::FAILURE);}
-    if(node_team)
-    {
-        Team* team =node_team->get_data_Node();
-        if(team->get_num_players()==0)
+        if (teamId < 0)
+        {
+            if (num_players == 0)
+                return output_t<int>(StatusType::FAILURE);
+            return output_t<int>(playersGoals->get_higher()->get_playerID());
+        }
+        Node<Team *, TeamIDOrder> *node_team = all_teams->search(teamId);
+        if (node_team == nullptr)
         {
             return output_t<int>(StatusType::FAILURE);
         }
-       return output_t<int>(team->get_top_player()->get_playerID());
+        if (node_team)
+        {
+            Team *team = node_team->get_data_Node();
+            if (team->get_num_players() == 0)
+            {
+                return output_t<int>(StatusType::FAILURE);
+            }
+            return output_t<int>(team->get_top_player()->get_playerID());
+        }
     }
-    return output_t<int>(StatusType::INVALID_INPUT);
+    catch (std::bad_alloc&)
+    {
+        return StatusType::ALLOCATION_ERROR;
+    }
 }
 
 output_t<int> world_cup_t::get_all_players_count(int teamId)
@@ -339,24 +378,31 @@ output_t<int> world_cup_t::get_all_players_count(int teamId)
     {
         return output_t<int>(StatusType::INVALID_INPUT);
     }
-    if(teamId > 0)
+    try
     {
-        Node<Team*, TeamIDOrder>* node_team = all_teams->search( teamId);
-        if(node_team== nullptr)
+        if (teamId > 0)
         {
-            return output_t<int>(StatusType::FAILURE);
+            Node<Team *, TeamIDOrder> *node_team = all_teams->search(teamId);
+            if (node_team == nullptr)
+            {
+                return output_t<int>(StatusType::FAILURE);
+            }
+            if (node_team)
+                return output_t<int>(all_teams->get_data(node_team)->get_num_players());
         }
-        if(node_team)
-            return output_t<int>(all_teams->get_data(node_team)->get_num_players());
+        return output_t<int>(num_players);
     }
-    return output_t<int>(num_players);
+    catch (std::bad_alloc&)
+    {
+        return StatusType::ALLOCATION_ERROR;
+    }
 }
 
 StatusType world_cup_t::get_all_players(int teamId, int *const output)
 {
 	if (teamId == 0 || !output)
         return StatusType::INVALID_INPUT;
-    else if (teamId < 0)
+    if (teamId < 0)
     {
         if (num_players == 0)
             return StatusType::FAILURE;
@@ -393,56 +439,46 @@ output_t<int> world_cup_t::get_closest_player(int playerId, int teamId)
 {
 	if (playerId <= 0 || teamId <= 0)
         return output_t<int>(StatusType::INVALID_INPUT);
-    Node<Team*,TeamIDOrder>* ptr = all_teams->search(teamId);
-    if(ptr== nullptr)
+    try
     {
-        return output_t<int>(StatusType::FAILURE);
-    }
-    Team* ptr1= ptr->get_data_Node();
-    AVL_Tree<Player*, Player::PlayerIDOrder>* ptr2=ptr1->get_players();
-    Node<Player*, Player::PlayerIDOrder>* ptr3=ptr2->search(playerId);
-    if(ptr3== nullptr)
-        return output_t<int>(StatusType::FAILURE);
+        Node<Team *, TeamIDOrder> *ptr = all_teams->search(teamId);
 
-    int j=ptr3->get_data_Node()->get_closest();
-    if(j!=-1)
-    {return output_t<int>(j);
+        if (ptr == nullptr)
+        {
+            return output_t<int>(StatusType::FAILURE);
         }
-    else
-
+        Team *ptr1 = ptr->get_data_Node();
+        AVL_Tree<Player *, Player::PlayerIDOrder> *ptr2 = ptr1->get_players();
+        Node<Player *, Player::PlayerIDOrder> *ptr3 = ptr2->search(playerId);
+        if (ptr3 == nullptr)
+            return output_t<int>(StatusType::FAILURE);
+        int j = ptr3->get_data_Node()->get_closest();
+        if (j != -1)
+        {
+            return output_t<int>(j);
+        }
+    }
+    catch (std::bad_alloc&)
+    {
+        return StatusType::ALLOCATION_ERROR;
+    }
    return output_t<int>(StatusType::FAILURE);
 }
 
 output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId)
 {
-	if (minTeamId < 0 || maxTeamId < minTeamId)
+    if (minTeamId < 0 || maxTeamId < minTeamId)
         return output_t<int>(StatusType::INVALID_INPUT);
-    int winner = legal_teams->knockout_tree(minTeamId, maxTeamId);
-    if (winner == 0)
-        return output_t<int>(StatusType::FAILURE);
-    return output_t<int>(winner);
+    try
+    {
+        int winner = legal_teams->knockout_tree(minTeamId, maxTeamId);
+
+        if (winner == 0)
+            return output_t<int>(StatusType::FAILURE);
+        return output_t<int>(winner);
+    }
+    catch (std::bad_alloc&)
+    {
+        return StatusType::ALLOCATION_ERROR;
+    }
 }
-/*
-AVL_Tree<Player*, Player::PlayerIDOrder>& world_cup_t::get_playerIDs()
-{
-    return playersID;
-}
-AVL_Tree<Player*, Player::PlayerGoalsOrder>&  world_cup_t::playersGoals_get()
-{
-    return playersGoals;
-}
-AVL_Tree<Team*, TeamIDOrder>&  world_cup_t::legel_teams_get()
-{
-    return legal_teams;
-}
-AVL_Tree<Team*, TeamIDOrder>&  world_cup_t::all_teams_get()
-{
-    return all_teams;
-}
-void world_cup_t::print()
-{
-    if(this->playersID.get_root()== nullptr)
-        cout<<"shit"<<'\n';
-    else
-        cout<<"shitworks"<<'\n';
-}*/

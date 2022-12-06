@@ -80,9 +80,6 @@ public:
 
     void connect_top_bottom();
 
-    template<class Condition>
-    bool order(const Player &p1, const Condition con) const;
-
     class PlayerGoalsOrder
     {
     public:
