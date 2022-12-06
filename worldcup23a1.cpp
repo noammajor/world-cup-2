@@ -288,7 +288,8 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
             all_teams->remove(team2->get_ID());
             legal_teams->remove(team2->get_ID());
             team1->change_ID(newTeamId);
-            team1->get_players()->inorder_change(team1->get_players()->get_root(), team1);
+            if(team1->get_num_players() > 0)
+                team1->get_players()->inorder_change(team1->get_players()->get_root(), team1);
             if(team1->is_legal())
                 legal_teams->insert_to_tree(team1);
             all_teams->insert_to_tree(team2);
