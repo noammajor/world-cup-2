@@ -699,7 +699,7 @@ Node<T, Cond>* AVL_Tree<T, Cond>::create_next(int index, int size, T* united_dat
     if (size/2 > 0)
     {
         Node<T, Cond>* next_smaller = new Node<T, Cond>;
-        node->son_smaller = create_next(0, size/2, united_data, next_smaller);
+        node->son_smaller = create_next(index, size/2, united_data, next_smaller);
         node->son_smaller->father = node;
     }
     else
