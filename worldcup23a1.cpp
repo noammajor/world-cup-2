@@ -49,8 +49,8 @@ StatusType world_cup_t::remove_team(int teamId)
 {
     if (teamId <= 0)
         return StatusType::INVALID_INPUT;
-    Node<Team*, TeamIDOrder>* temp=all_teams->search(teamId);
-    if(temp== nullptr)
+    Node<Team*, TeamIDOrder>* temp = all_teams->search(teamId);
+    if(temp == nullptr)
     {
         return StatusType::FAILURE;
     }
@@ -271,7 +271,6 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
         if (team1->get_num_players() == 0 && team2->get_num_players() > 0)
         {
             all_teams->remove(team1->get_ID());
-            legal_teams->remove(team1->get_ID());
             all_teams->remove(team2->get_ID());
             legal_teams->remove(team2->get_ID());
             team2->change_ID(newTeamId);
@@ -286,7 +285,6 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
             all_teams->remove(team1->get_ID());
             legal_teams->remove(team1->get_ID());
             all_teams->remove(team2->get_ID());
-            legal_teams->remove(team2->get_ID());
             team1->change_ID(newTeamId);
             if(team1->get_num_players() > 0)
                 team1->get_players()->inorder_change(team1->get_players()->get_root(), team1);
@@ -429,7 +427,6 @@ output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId)
     try
     {
         int winner = legal_teams->knockout_tree(minTeamId, maxTeamId);
-
         if (winner == 0)
             return output_t<int>(StatusType::FAILURE);
         return output_t<int>(winner);

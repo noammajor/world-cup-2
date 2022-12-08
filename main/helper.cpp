@@ -63,11 +63,11 @@ int main()
     cup.unite_teams(1,2,2);
     int c = cup.get_top_scorer(-1).ans();;
     int x = cup.get_all_players_count(3).ans();
-   /* cup.get_all_players(2,t.p);
+    cup.get_all_players(2,t.p);
     for (int i=0;i<23;i++)
     {
         std::cout<<t.p[i]<<'\n';
-    }*/
+    }
     int* xarr = new int[x];
     cup.get_all_players(4, xarr);
     cup.get_closest_player(2008,2);

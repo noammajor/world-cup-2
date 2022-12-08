@@ -632,7 +632,7 @@ Node<T,Cond>* AVL_Tree<T, Cond>::set_closests_small(Node<T,Cond>* player) const
             {
                 temp = temp->father;
             }
-            temp=temp->father;
+            temp = temp->father;
             return temp;
         }
         else if(temp == temp->father->son_larger)

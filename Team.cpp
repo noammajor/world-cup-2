@@ -65,7 +65,7 @@ void Team::change_ID(int new_ID)
 
 void Team::remove_player(int playerID)
 {
-    Node<Player*,Player::PlayerIDOrder>* temp=players->search(playerID);
+    Node<Player*,Player::PlayerIDOrder>* temp = players->search(playerID);
     if(temp== nullptr)
     {
         return;
